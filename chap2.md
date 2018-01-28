@@ -78,9 +78,9 @@ self: undefined;
  cannot reference undefined identifier
 ```
 
-什么？？我们命名用letrec定义了self，为什么报错说它没有定义呢？原因是——**卫生**！要知道Scheme的syntax-rules是卫生的，因此，它会透明地重命名宏引入的所有标识符，以确保在宏展开后他们不会意外绑定或者被绑定。使用DrRacket的宏步进器（macro stepper）可以很清楚地观察到这一点。你会看到，greater方法中的self标识符与letrec表达式中的同名标识符的颜色不同。
+什么？？我们明明用letrec定义了self，为什么报错说它没有定义呢？原因是——**卫生**！要知道Scheme的syntax-rules是卫生的，因此，它会透明地重命名宏引入的所有标识符，以确保在宏展开后他们不会意外绑定或者被绑定。使用DrRacket的宏步进器（macro stepper）可以很清楚地观察到这一点。你会看到，greater方法中的self标识符与letrec表达式中的同名标识符的颜色不同。
 
-幸运的是，defmac支持一种方法，指定宏本身引入的标识符也可以被用户代码使用。这里我们唯一需要做的是指定self 就是这样的标识符：
+幸运的是，defmac支持一种方法，指定宏本身引入的标识符也可以被用户代码使用。这里我们唯一需要做的是指定self就是这样的标识符：
 
 ```Racket
 (defmac (OBJECT ([field fname init] ...)
