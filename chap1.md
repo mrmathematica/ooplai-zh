@@ -6,7 +6,7 @@
 
 对象的目的是，将状态（可能但不一定是可变的）连同依赖于该状态的行为一起封装在一致的整体中。这里的状态通常被称为**字段**(field)（或**实例变量**(instance variable)），而行为是以**方法**(method)的形式提供。调用方法通常被称为**消息传递**(message passing)：发送消息给对象，如果它理解了，就执行相关的方法。
 
-在Scheme这样的高级程序语言中，我们看到过类似的东西：
+在Scheme这样的高级编程语言中，我们看到过类似的东西：
 
 ```Racket
 (define add
@@ -72,7 +72,7 @@
   (let ([vals '()])
     (define (pop)
       (if (empty? vals)
-          (error "cannot pop from an empty stack")
+          (error "cannot pop from an empty stack") ;无法从空栈中pop
           (let ([val (car vals)])
             (set! vals (cdr vals))
             val)))
@@ -82,7 +82,7 @@
  
     (define (peek)
       (if (empty? vals)
-          (error "cannot peek from an empty stack")
+          (error "cannot peek from an empty stack") ;无法从空栈中peek
           (car vals)))
  
     (λ (cmd . args)
@@ -90,10 +90,10 @@
         [(pop) (pop)]
         [(push) (push (car args))]
         [(peek) (peek)]
-        [else (error "invalid command")]))))
+        [else (error "invalid command")])))) ;无效的命令
 ```
 
-这里，我们没有直接在lambda中编写方法体，而是使用了内层的define。另外请注意，我们在lambda的参数中使用了点符号：这样函数就能够接收第一个参数（cmd）以及此后零或多个的参数（作为列表在body中绑定到args）。
+这里，我们没有直接在lambda中编写方法体，而是使用了内层的define。另外请注意，我们在lambda的参数中使用了点符号：这样函数就能够接收第一个参数（cmd）以及此后零或多个的参数（以链表形式在body中绑定到args）。
 
 试试看：
 
@@ -121,7 +121,7 @@ cannot pop from an empty stack
       (apply (cdr (assoc msg methods)) args)))))
 ```
 
-请注意这里定义的λ，它以一种通用的方式分配正确的方法。我们首先把所有的方法都放在一个关联列表（即列表的元素都是对）中，将符号（也就是消息）关联到相应的方法。当调用point时，我们（用assoc）查找消息，得到相应的方法。然后我们调用方法。
+请注意这里定义的λ，它以一种通用的方式分配正确的方法。我们首先把所有的方法都放在一个关联链表（即链表的元素都是(cons)对）中，将符号（也就是消息）关联到相应的方法。当调用point时，我们（用assoc）查找消息，得到相应的方法。然后调用方法。
 
 ```Racket
 > (point 'x! 6)
@@ -133,7 +133,7 @@ cannot pop from an empty stack
 
 遵循上面确定的模式，我们可以用宏表达一个简单的对象系统。
 
-> 请注意，在本书中我们使用[defmac](./defmac.rkt)来定义宏。defmac类似于define-syntax-rule，但是它还支持关键字参数，还有标识符的捕获（通过`#:keywords`和`#:captures`可选参数）。
+> 请注意，在本书中我们使用[defmac](./defmac.rkt)来定义宏。defmac类似于define-syntax-rule，但是它还支持关键字参数，外加标识符捕获（通过`#:keywords`和`#:captures`可选参数）。
 
 ```Racket
 (defmac (OBJECT ([field fname init] ...)
@@ -145,7 +145,7 @@ cannot pop from an empty stack
         (apply (cdr (assoc msg methods)) vals)))))
 ```
 
-我们还可以定义箭头`->`符号表示定义发送消息给对象，例如`(-> st push 3)`：
+我们还可以定义箭头`->`符号表示发送消息给对象，例如`(-> st push 3)`：
 
 ```Racket
 (defmac (-> o m arg ...)
@@ -272,7 +272,7 @@ cdr: contract violation
         (let ([found (assoc msg methods)])
           (if found
               (apply (cdr found) vals)
-              (error "message not understood:" msg)))))))
+              (error "message not understood:" msg))))))) ;未知的消息
 ```
 
 我们不再假设在对象的方法表中会有消息关联的方法，而是首先查找并将结果绑定到found；如果找不到方法，found将会是#f。在这种情况下，我们给出有意义的错误信息。
