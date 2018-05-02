@@ -1,7 +1,8 @@
 # [面对对象编程语言：应用和解释](https://users.dcc.uchile.cl/~etanter/ooplai/)
 
 作者 Éric Tanter
-译者 MrMathematica
+
+译者 MrMathematica、lotuc
 
 2017年版
 
