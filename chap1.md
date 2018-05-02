@@ -1,6 +1,6 @@
 # 1 从函数到简单对象
 
-要探索面向对象编程语言，我们从PLAI（[《编程语言：应用和解释》](https://www.gitbook.com/read/book/lotuc/plai-cn)）中已经知道的，以及对于什么是对象的直觉开始。
+对面向对象编程语言的探索从我们于PLAI（[《编程语言：应用和解释》](https://www.gitbook.com/read/book/lotuc/plai-cn)）中所学到的、以及对于什么是对象的直觉开始。
 
 ## 1.1 有状态函数与对象模式
 
@@ -76,15 +76,15 @@
           (let ([val (car vals)])
             (set! vals (cdr vals))
             val)))
- 
+
     (define (push val)
       (set! vals (cons val vals)))
- 
+
     (define (peek)
       (if (empty? vals)
           (error "cannot peek from an empty stack") ;无法从空栈中peek
           (car vals)))
- 
+
     (λ (cmd . args)
       (case cmd
         [(pop) (pop)]
@@ -93,7 +93,7 @@
         [else (error "invalid command")])))) ;无效的命令
 ```
 
-这里，我们没有直接在lambda中编写方法体，而是使用了内层的define。另外请注意，我们在lambda的参数中使用了点符号：这样函数就能够接收第一个参数（cmd）以及此后零或多个的参数（以链表形式在函数体中绑定到args）。
+这里，我们没有直接在lambda中编写方法体，而是使用了内层的define。另外请注意，我们在lambda的参数中使用了点符号：这样函数就能够接收一个参数（cmd）以零或多个额外参数（以链表形式在函数体中绑定到args）。
 
 试试看：
 
@@ -121,7 +121,7 @@ cannot pop from an empty stack
       (apply (cdr (assoc msg methods)) args)))))
 ```
 
-请注意这里定义的λ，它以一种通用的方式分配正确的方法。我们首先把所有的方法都放在一个关联链表（即链表的元素都是(cons)对）中，将符号（也就是消息）关联到相应的方法。当调用point时，我们（用assoc）查找消息，得到相应的方法。然后调用方法。
+请注意这里定义的λ，它以一种通用的方式将消息分发到正确的方法。我们首先把所有的方法都放在一个关联链表（即元素为pair的链表）中，将符号（也就是消息）关联到相应的方法。当调用point时，我们（用assoc）查找消息，得到相应的方法。然后调用它。
 
 ```Racket
 > (point 'x! 6)
@@ -131,9 +131,9 @@ cannot pop from an empty stack
 
 ## 1.2 Scheme中的（第一种）简单对象系统
 
-遵循上面确定的模式，我们可以用宏表达一个简单的对象系统。
+我们可以用宏在Scheme中嵌入一个遵循上面确定的模式的简单对象系统。
 
-> 请注意，在本书中我们使用[defmac](./defmac.rkt)来定义宏。defmac类似于define-syntax-rule，但是它还支持关键字参数，外加标识符捕获（通过`#:keywords`和`#:captures`可选参数）。
+> 请注意，在本书中我们使用[defmac](./defmac.rkt)来定义宏。defmac类似于`define-syntax-rule`，但是它还支持关键字参数，外加标识符捕获（通过`#:keywords`和`#:captures`可选参数）。
 
 ```Racket
 (defmac (OBJECT ([field fname init] ...)
@@ -178,7 +178,7 @@ cannot pop from an empty stack
 
 ## 1.3 构造对象
 
-到目前为止，我们所创建的对象都是独特的。如果我们想要多个点对象，每个可以有不同的初始坐标呢？
+到目前为止，我们的对象都是作为独立样本被创建。如果我们想要多个点对象，每个可以有不同的初始坐标呢？
 
 在函数式编程的语境中，我们知道如何正确地创建各种类似的函数：使用高阶函数，带上合适的参数，其作用是返回我们想要的特定实例。例如，从前面定义的add函数中，我们可以获得各种单参数加法函数：
 
@@ -206,7 +206,7 @@ cannot pop from an empty stack
     [method y! (new-y) (set! y new-y)])))
 ```
 
-make-point函数的参数是初始坐标，返回新创建的、正确地初始化后的对象。
+`make-point`函数的参数是初始坐标，返回新创建的、正确地初始化后的对象。
 
 ```Racket
 > (let ([p1 (make-point 5 5)]
@@ -219,7 +219,7 @@ make-point函数的参数是初始坐标，返回新创建的、正确地初始�
 
 ## 1.4 动态分发
 
-我们的简单对象系统就可以展示面向对象编程的基本特性：动态分发。请注意，在下面的代码中，node（节点）将sum消息发送给每个子节点，并不知道它们是leaf（叶节点）还是node：
+我们的简单对象系统就足以展示面向对象编程的基本特性：动态分发。请注意，在下面的代码中，node（节点）将sum消息发送给每个子节点，并不知道它们是leaf（叶节点）还是node：
 
 ```Racket
 (define (make-node l r)
@@ -227,13 +227,13 @@ make-point函数的参数是初始坐标，返回新创建的、正确地初始�
   ([field left l]
    [field right r])
   ([method sum () (+ (-> left sum) (-> right sum))])))
- 
+
 (define (make-leaf v)
  (OBJECT
   ([field value v])
   ([method sum () value])))
 
- 
+
 > (let ([tree (make-node
                (make-node (make-leaf 3)
                           (make-node (make-leaf 10)
@@ -246,7 +246,7 @@ make-point函数的参数是初始坐标，返回新创建的、正确地初始�
 
 尽管看起来很简单，这个对象系统已经足以说明对象的基本抽象机制，以及它和抽象数据类型（abstract data type）的区别。参见[第三章](./chap3.md)。
 
-## 1.5 例外处理
+## 1.5 错误处理
 
 让我们看看，如果发送消息给不知道如何处理它的对象会发生什么：
 
@@ -285,4 +285,4 @@ cdr: contract violation
 message not understood: print
 ```
 
-本章，我们成功地在Scheme中嵌入了一个简单的对象系统，它显示了词法作用域的一等函数和对象之间的连接。但是，我们还远没有完成，目前的对象系统仍然是原始和不完整的。
+本章，我们成功地在Scheme中嵌入了一个简单的对象系统，它显示了词法作用域的一等函数和对象之间的连接。但是，我们还远没有完成，目前的对象系统仍然不完整且非常原始。
