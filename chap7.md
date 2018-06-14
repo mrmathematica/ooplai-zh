@@ -26,13 +26,13 @@
 
 ## 7.1 接口
 
-（在我们的语言中）实现新的语法形式，定义接口，接口可以扩展超接口：
+（在我们的语言中）引入定义接口的新的语法形式（接口可以扩展超接口）：
 
 ```Racket
 (interface (superinterface-expr ...) id ...)
 ```
 
-实现新的语法形式，类可以实现（多个）接口：
+引入新的类定义语法，使其可以实现（多个）接口：
 
 ```Racket
 (CLASS* super-expr (interface-expr ...) decls ...)
@@ -44,13 +44,13 @@
 ```Racket
 (define positionable-interface
   (interface () get-pos set-pos move-by))
- 
+
 (define Figure
   (CLASS* Root (positionable-interface)
      ....))
 ```
 
-扩展类的协议，使之能检查某个类是否实现了某个接口：
+扩展类的协议，使之能检查给定类是否实现了特定接口：
 
 ```Racket
 > (implements? Figure positionable-interface)
@@ -59,19 +59,19 @@
 
 ## 7.2 Mixin
 
-Mixin是将超类参数化的类声明。当类的继承层次结构中存在共享部分，而单继承又不足以表达时，mixin可以组合创建新类。
+Mixin是将超类参数化的类声明。当类的继承层次结构中存在共享部分，而单继承又不足以表达时，可以通过组合mixin来创建新类。
 
-因为我们的类由函数实现的，是一等的值（first-class value），所以mixin的实现是“免费的”。
+因为我们的类由函数实现的，是一等的值（first-class value），所以mixin的实现毫不费力。
 
 ```Racket
 (define (foo-mixin cl)
   (CLASS cl (....) (....)))
- 
+
 (define (bar-mixin cl)
   (CLASS cl (....) (....)))
- 
+
 (define Point (CLASS () ....))
- 
+
 (define foobarPoint
   (foo-mixin (bar-mixin Point)))
 (define fbp (foobarPoint 'create))
