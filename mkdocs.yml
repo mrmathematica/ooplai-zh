@@ -1,0 +1,17 @@
+site_name: "面对对象编程语言：应用和解释"
+repo_url: https://github.com/mrmathematica/ooplai-zh.git
+docs_dir: docs
+
+theme:
+  name: material
+
+plugins: []
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - js/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
