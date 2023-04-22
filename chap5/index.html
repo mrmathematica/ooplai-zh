@@ -1,0 +1,863 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../chap4/">
+      
+      
+        <link rel="next" href="../chap6/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.3">
+    
+    
+      
+        <title>5 类 - 面对对象编程语言：应用和解释</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.c4a75a56.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#5" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="面对对象编程语言：应用和解释" class="md-header__button md-logo" aria-label="面对对象编程语言：应用和解释" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            面对对象编程语言：应用和解释
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5 类
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mrmathematica/ooplai-zh.git" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="面对对象编程语言：应用和解释" class="md-nav__button md-logo" aria-label="面对对象编程语言：应用和解释" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    面对对象编程语言：应用和解释
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mrmathematica/ooplai-zh.git" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Summary
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chap1/" class="md-nav__link">
+        1 从函数到简单对象
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chap2/" class="md-nav__link">
+        2 寻找Self
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chap3/" class="md-nav__link">
+        3 对象的好处和局限性
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chap4/" class="md-nav__link">
+        4 转发和委托
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          5 类
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        5 类
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    5.1 共享方法定义
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    5.2 访问字段
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    5.3 类
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#54-scheme" class="md-nav__link">
+    5.4 在Scheme中嵌入类
+  </a>
+  
+    <nav class="md-nav" aria-label="5.4 在Scheme中嵌入类">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#541" class="md-nav__link">
+    5.4.1 类的宏
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#542" class="md-nav__link">
+    5.4.2 辅助语法
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#543" class="md-nav__link">
+    5.4.3 例子
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#544" class="md-nav__link">
+    5.4.4 强封装
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#55" class="md-nav__link">
+    5.5 初始化
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#56" class="md-nav__link">
+    5.6 匿名类，局部类和嵌套类
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chap6/" class="md-nav__link">
+        6 继承
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chap7/" class="md-nav__link">
+        7 充满可能的世界
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    5.1 共享方法定义
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    5.2 访问字段
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    5.3 类
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#54-scheme" class="md-nav__link">
+    5.4 在Scheme中嵌入类
+  </a>
+  
+    <nav class="md-nav" aria-label="5.4 在Scheme中嵌入类">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#541" class="md-nav__link">
+    5.4.1 类的宏
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#542" class="md-nav__link">
+    5.4.2 辅助语法
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#543" class="md-nav__link">
+    5.4.3 例子
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#544" class="md-nav__link">
+    5.4.4 强封装
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#55" class="md-nav__link">
+    5.5 初始化
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#56" class="md-nav__link">
+    5.6 匿名类，局部类和嵌套类
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="5">5 类</h1>
+<p>回头讨论工厂函数（参见<a href="../chap1/#13-构造对象">构造对象</a>）：</p>
+<pre><code class="language-Racket">(define (make-point init-x)
+  (OBJECT
+   ([field x init-x])
+   ([method x? () x]
+    [method x! (new-x) (begin (set! x new-x) self)])))
+
+(define p1 (make-point 0))
+(define p2 (make-point 1))
+</code></pre>
+<p>所有点对象都拥有自己的方法，尽管它们是相同的。至少它们的签名和主体是一样的，对吧？它们<strong>完全</strong>一样吗？事实并非如此。在这个版本的对象系统中，唯一的区别是，方法中包含对象自身：就是说，在<code>p1</code>的方法中，<code>self</code>指向<code>p1</code>，而在<code>p2</code>的方法中它指向<code>p2</code>。换句话说，方法，也就是函数，因所捕捉的词法环境而不同。</p>
+<h2 id="51">5.1 共享方法定义</h2>
+<p>为了支持不同的<code>self</code>，就重复所有的方法定义并不合理。将共同部分（方法体）分解出来，将变量（绑定到<code>self</code>的对象）参数化更合理。</p>
+<p>先试试不用宏来实现。回想一下，不使用宏的情况下，点对象的定义如下：</p>
+<pre><code class="language-Racket">(define make-point
+  (λ (init-x)
+    (letrec ([self
+              (let ([x init-x])
+                (let ([methods (list (cons 'x? (λ () x))
+                                     (cons 'x! (λ (nx)
+                                                 (set! x nx)
+                                                 self)))])
+                  (λ (msg . args)
+                    (apply (cdr (assoc msg methods)) args))))])
+      self)))
+</code></pre>
+<p>如果将<code>(let ([methods...]))</code>从<code>(λ (init-x) ...)</code>中提取出来，我们就可以实现想要的方法定义的共享。但是这样的话，字段变量就不在方法体的作用域中了。具体地说，在这个例子中，这意味着<code>x</code>在两个方法中都没有绑定。这表明，除了<code>self</code>之外，方法还需要参数化于状态（字段值）之上。不过，好在<code>self</code>可以“持有”状态（它可以捕获其词法环境中的字段绑定）。只要找到通过<code>self</code>能够提取字段值（还有对其赋值）的方法就可以了。为此，我们的对象将支持两个特定的消息<code>-read</code>和<code>-write</code>:</p>
+<pre><code class="language-Racket">(define make-point
+  (let ([methods (list (cons 'x? (λ (self)
+                                    (λ () (self '-read))))
+                       (cons 'x! (λ (self)
+                                    (λ (nx)
+                                      (self '-write nx)
+                                      self))))])
+    (λ (init-x)
+      (letrec ([self
+                (let ([x init-x])
+                  (λ (msg . args)
+                    (case msg
+                      [(-read) x]
+                      [(-write) (set! x (first args))]
+                      [else
+                       (apply ((cdr (assoc msg methods)) self) args)])))])
+      self))))
+</code></pre>
+<p>请仔细研究这里的方法现在是如何参数化于<code>self</code>的，还有，要存取字段现在需要向<code>self</code>发送特殊消息。接下来再研究对象本身的定义：当收到消息时，它首先检查消息是否为<code>-read</code>或<code>-write</code>，如果是的话就进行存取操作。来试试这是否可行：</p>
+<pre><code class="language-Racket">(define p1 (make-point 1))
+(define p2 (make-point 2))
+
+
+&gt; ((p1 'x! 10) 'x?)
+10
+&gt; (p2 'x?)
+2
+</code></pre>
+<h2 id="52">5.2 访问字段</h2>
+<p>当然，这个定义不怎么通用，因为它只适用于一个字段<code>x</code>。我们需要将其一般化：字段名必须作为参数传给<code>-read</code>和<code>-write</code>消息。问题是，如何用字段名（符号）访问对象的词法环境中的同名变量。一个简单的解决方案是使用某种结构来保存字段值。方法的定义就是这样处理的，保存的是方法名称和方法定义之间的关联。不过，与方法表不同，字段绑定是（至少是潜在）可变的。Racket不支持对关联表进行赋值，所以我们使用字典（更确切地说，哈希表），用<code>dict-ref</code>和<code>dict-set!</code>访问。</p>
+<pre><code class="language-Racket">(define make-point
+  (let ([methods (list (cons 'x? (λ (self)
+                                    (λ () (self '-read 'x))))
+                       (cons 'x! (λ (self)
+                                  (λ (nx)
+                                    (self '-write 'x nx)
+                                    self))))])
+    (λ (init-x)
+      (letrec ([self
+                (let ([fields (make-hash (list (cons 'x init-x)))])
+                  (λ (msg . args)
+                    (case msg
+                      [(-read)  (dict-ref  fields (first args))]
+                      [(-write) (dict-set! fields (first args)
+                                                  (second args))]
+                      [else
+                       (apply ((cdr (assoc msg methods)) self) args)])))])
+      self))))
+
+&gt; (let ((p1 (make-point 1))
+        (p2 (make-point 2)))
+    (+ ((p1 'x! 10) 'x?)
+       (p2 'x?)))
+12
+</code></pre>
+<p>请注意<code>make-point</code>现在保存了方法定义的列表，还有，被创建的对象捕获了<code>fields</code>(字段)字典（该字典先初始化，然后返回给对象）。</p>
+<h2 id="53">5.3 类</h2>
+<p>虽然我们的确实现了方法定义的共享，但是这个解决方案并不理想。为什么？观察对象的定义（上述<code>(λ (msg . args) ....)</code>的函数体）。在那里实现的逻辑在所有用<code>make-point</code>创建对象中都是重复的：每个对象都有它自己的副本，当它收到<code>-read</code>消息时，在<code>fields</code>字典中查找；<code>-write</code>消息时，更新<code>fields</code>字典；任何其他消息，查找<code>methods</code>表，然后应用对应方法。</p>
+<p>所以说，所有这些逻辑在对象之间都可以共享。对象体中唯一的自由变量是<code>fields</code>和<code>self</code>。换句话说，我们可以把对象定义为它自己外加它的字段，而把所有其他的逻辑都交给<code>make-point</code>函数。这样的话，<code>make-point</code>的功能不再是单一的只负责创建新的对象，还负责处理对字段的访问和对消息的处理。也就是说，<code>make-point</code>演变成所谓的<strong>类</strong>（class）。</p>
+<p>我们如何表示类？目前它只是可以调用的函数（它会创建对象——一个<strong>实例</strong>）；如果需要该函数有不同的行为，我们可以应用本书开始时看到的<a href="../chap1/#11-有状态函数与对象模式">对象模式</a>。</p>
+<blockquote>
+<p>在某些语言中，类本身就是对象。这方面的范例就是Smalltalk。绝对值得花时间一学！</p>
+</blockquote>
+<p>于是：</p>
+<pre><code class="language-Racket">(define Point
+  ....
+  (λ (msg . args)
+    (case msg
+      [(create) create instance]
+      [(read) read field]
+      [(write) write field]
+      [(invoke) invoke method])))
+</code></pre>
+<p>这种模式明确了类的作用：它产生对象，调用方法，读取和写入其实例的字段。</p>
+<p>现在，对象的作用是什么？他只需要有标识（identity）功能，知道自己属于哪个类，并记录自己的字段值。它不再自带任何行为。换种说法，对象可以定义为普通的数据结构：</p>
+<pre><code class="language-Racket">(define-struct obj (class values))
+</code></pre>
+<p>接下来看看现在该怎么定义Point类：</p>
+<pre><code class="language-Racket">(define Point
+  (let ([methods ....])
+    (letrec
+        ([class
+             (λ (msg . vals)
+               (case msg
+                 [(create) (let ((values (make-hash '((x . 0)))))
+                             (make-obj class values))]
+                 [(read) (dict-ref (obj-values (first vals))
+                                   (second vals))]
+                 [(write) (dict-set! (obj-values (first vals))
+                                     (second vals)
+                                     (third vals))]
+                 [(invoke)
+                   (let ((found (assoc (second vals) methods)))
+                     (if found
+                         (apply ((cdr found) (first vals)) (cddr vals))
+                         (error &quot;message not understood&quot;)))]))])
+      class)))
+
+&gt; (Point 'create)
+#&lt;obj&gt;
+</code></pre>
+<p>要实例化<code>Point</code>类，只需向其发送<code>create</code>消息。现在对象是结构体了，我们需要一种方法来发送消息，还有访问其字段。要向对象<code>p</code>发送消息，先要检索它的类，然后给这个类发送<code>invoke</code>消息：</p>
+<pre><code class="language-Racket">((obj-class p) 'invoke p 'x?)
+</code></pre>
+<p>访问字段也是类似。</p>
+<h2 id="54-scheme">5.4 在Scheme中嵌入类</h2>
+<p>本节我们使用宏在Scheme中嵌入类。</p>
+<h3 id="541">5.4.1 类的宏</h3>
+<p>我们来定义<code>CLASS</code>语法抽象，它负责创建类：</p>
+<pre><code class="language-Racket">(defmac (CLASS ([field f init] ...)
+               ([method m params body] ...))
+     #:keywords  field method
+     #:captures self
+     (let ([methods (list (cons 'm (λ (self)
+                                     (λ params body))) ...)])
+       (letrec
+           ([class
+                (λ (msg . vals)
+                  (case msg
+                    [(create)
+                     (make-obj class
+                               (make-hash (list (cons 'f init) ...)))]
+                    [(read)
+                     (dict-ref (obj-values (first vals)) (second vals))]
+                    [(write)
+                     (dict-set! (obj-values (first vals)) (second vals) (third vals))]
+                    [(invoke)
+                     (if (assoc (second vals) methods)
+                         (apply ((cdr (assoc (second vals) methods)) (first vals)) (cddr vals))
+                         (error &quot;message not understood&quot;))]))])
+         class)))
+</code></pre>
+<h3 id="542">5.4.2 辅助语法</h3>
+<p>我们需要引入新的语法定义，以方便地调用方法（<code>-&gt;</code>），还需要引入类似的语法，来访问当前对象的字段（<code>?</code>和<code>!</code>）。</p>
+<pre><code class="language-Racket">(defmac (-&gt; o m arg ...)
+  (let ((obj o))
+    ((obj-class obj) 'invoke obj 'm arg ...)))
+
+(defmac (? fd) #:captures self
+  ((obj-class self) 'read self 'fd))
+
+(defmac (! fd v) #:captures self
+  ((obj-class self) 'write self 'fd v))
+</code></pre>
+<p>还可以定义辅助函数来创建新的实例：</p>
+<pre><code class="language-Racket">(define (new c)
+  (c 'create))
+</code></pre>
+<p>这个简单的函数在概念上非常重要：它有助于隐藏类在内部作为函数实现的事实，还隐藏了用于请求类创建实例的符号。</p>
+<h3 id="543">5.4.3 例子</h3>
+<p>来看类的例子：</p>
+<pre><code class="language-Racket">(define Point
+ (CLASS ([field x 0])
+        ([method x? () (? x)]
+         [method x! (new-x) (! x new-x)]
+         [method move (n) (-&gt; self x! (+ (-&gt; self x?) n))])))
+
+(define p1 (new Point))
+(define p2 (new Point))
+
+
+&gt; (-&gt; p1 move 10)
+&gt; (-&gt; p1 x?)
+10
+&gt; (-&gt; p2 x?)
+0
+</code></pre>
+<h3 id="544">5.4.4 强封装</h3>
+<p>关于字段访问，我们做了个重要的设计决定：字段访问器<code>?</code>和<code>!</code>只能作用于<code>self</code>！即，在我们的语言中不可能访问另一个对象的字段。这被称为具有<strong>强封装</strong>（Strong Encapsulation）对象的语言。Smalltalk就是这样（访问另一个对象的字段实际上是发送消息，因此可以由接收方对象来控制）。Java不是：可以访问任何对象的字段（如果可见性(visibility)允许的话）。我们的<strong>语法</strong>根本不允许访问外部字段。</p>
+<p>这样设计的另一个结果是，字段访问只能出现在方法体<strong>内</strong>：因为接收对象总是<code>self</code>，所以<code>self</code>必须已定义。比如说，试试在对象之外用<code>?</code>读取字段：</p>
+<pre><code class="language-Racket">&gt; (? f)
+self: undefined;
+ cannot reference undefined identifier
+</code></pre>
+<p>更好的做法是，上述程序会产生错误，表明<code>?</code>未定义。要做到这一点，我们简单地将<code>?</code>和<code>?</code>定义为<strong>局部</strong>语法形式，只在方法体的内被定义，而不是全局范围内有定义。只要将这些字段访问形式的定义从全局移动到<code>local</code>作用域内，<code>local</code>放在方法定义内：</p>
+<pre><code class="language-Racket">(defmac (CLASS ([field f init] ...)
+               ([method m params body] ...))
+     #:keywords field method
+     #:captures self ? !
+     (let ([methods
+            (local [(defmac (? fd) #:captures self
+                      ((obj-class self) 'read self 'fd))
+                    (defmac (! fd v) #:captures self
+                      ((obj-class self) 'write self 'fd v))]
+              (list (cons 'm (λ (self)
+                               (λ params body))) ...))])
+                (letrec
+                   ([class (λ (msg . vals) ....)]))))
+</code></pre>
+<p>在方法列表定义的局部作用域内定义语法形式<code>?</code>和<code>!</code>，确保了它们可以在方法体内可用，但在其他地方不可用。</p>
+<p>现在，字段访问器方法之外没有定义：</p>
+<pre><code class="language-Racket">&gt; (? f)
+?: undefined;
+ cannot reference undefined identifier
+</code></pre>
+<p>后文统一使用这种局部的方法。</p>
+<h2 id="55">5.5 初始化</h2>
+<p>我们已经看到，要从类获取对象（即实例化对象）的方法是向类发送<code>create</code>消息。能够给<code>create</code>传递参数，以指定对象的字段的初始值通常是有用的。目前，我们的类系统仅支持在类声明时指定默认字段值。在实例化时没法传递初始字段值。</p>
+<blockquote>
+<p>初始化方法是Smalltalk编程中的习惯叫法。在Java中，它们被称为构造函数（这可以说是个糟糕的名字，因为我们可以看到，它们并不负责构建对象，只是在实际创建对象之后才对其进行初始化）。</p>
+</blockquote>
+<p>有几种方法可以做到这一点。一个简单的方法是，要求对象实现<strong>初始化</strong>方法，并让这个类在每个新创建的对象上调用此初始化方法。我们将采用如下约定：如果<code>create</code>消息没有参数，那么我们不调用初始器（因此使用默认值）。如果有参数传入，我们就用这些参数调用初始器（称之为<code>initialize</code>）：</p>
+<pre><code class="language-Racket">....
+(λ (msg . vals)
+  (case msg
+    [(create)
+     (if (null? vals)
+         (make-obj class
+                   (make-hash (list (cons 'f init) ...)))
+         (let ((object (make-obj class (make-hash))))
+           (apply ((cdr (assoc 'initialize methods)) object) vals)
+           object))]
+    ....)) ....
+</code></pre>
+<p>我们可以改进实例化类的辅助函数，使其接受可变数目的参数：</p>
+<pre><code class="language-Racket">(define (new class . init-vals)
+    (apply class 'create init-vals))
+</code></pre>
+<p>来试试看：</p>
+<pre><code class="language-Racket">(define Point
+ (CLASS ([field x 0])
+        ([method initialize (nx) (-&gt; self x! nx)]
+         [method x? () (? x)]
+         [method x! (nx) (! x nx)]
+         [method move (n) (-&gt; self x! (+ (-&gt; self x?) n))])))
+
+(define p (new Point 5))
+
+&gt; (-&gt; p move 10)
+&gt; (-&gt; p x?)
+15
+</code></pre>
+<h2 id="56">5.6 匿名类，局部类和嵌套类</h2>
+<p>我们扩展了Scheme，引入了类。扩展的方式类似于之前的对象系统，类表示为一等（first-class）函数。这意味着，我们语言中的类是一等的实体，例如可以作为参数传递（参见前面<code>create</code>函数的定义）。另外，我们的系统也支持匿名类和嵌套的类。当然，这一切都建立在遵从词法作用域规则的基础上。</p>
+<pre><code class="language-Racket">(define (cst-class-factory cst)
+ (CLASS () ([method add (n) (+ n cst)]
+            [method sub (n) (- n cst)]
+            [method mul (n) (* n cst)])))
+
+(define Ops10  (cst-class-factory 10))
+(define Ops100 (cst-class-factory 100))
+
+&gt; (-&gt; (new Ops10) add 10)
+20
+&gt; (-&gt; (new Ops100) mul 2)
+200
+</code></pre>
+<p>我们也可以在局部作用域中引入类。也就是说，不同于类是全局可见的一阶实体的语言，我们可以在局部作用域中定义类。</p>
+<pre><code class="language-Racket">(define doubleton
+  (let ([the-class (CLASS ([field x 0])
+                          ([method initialize (x) (-&gt; self x! x)]
+                           [method x? () (? x)]
+                           [method x! (new-x) (! x new-x)]))])
+    (let ([obj1 (new the-class 1)]
+          [obj2 (new the-class 2)])
+      (cons obj1 obj2))))
+
+&gt; (-&gt; (cdr doubleton) x?)
+2
+</code></pre>
+<p>在这里，引入<code>the-class</code>的的目的仅在于创建两个实例，然后以对的形式返回这两个实例。在那之后，这个类就不再可用了。换种说法，无法再创建这个类的更多实例了。不过，我们创建的这两个实例当然仍然指向它们的类，因此这些对象仍可以使用。有趣的是，一旦这些对象被垃圾收集，他们的类也可以被收回。</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.efa0ade1.min.js"></script>
+      
+        <script src="../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

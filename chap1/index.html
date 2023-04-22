@@ -1,0 +1,708 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../chap2/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.3">
+    
+    
+      
+        <title>1 从函数到简单对象 - 面对对象编程语言：应用和解释</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.c4a75a56.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="面对对象编程语言：应用和解释" class="md-header__button md-logo" aria-label="面对对象编程语言：应用和解释" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            面对对象编程语言：应用和解释
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1 从函数到简单对象
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mrmathematica/ooplai-zh.git" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="面对对象编程语言：应用和解释" class="md-nav__button md-logo" aria-label="面对对象编程语言：应用和解释" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    面对对象编程语言：应用和解释
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mrmathematica/ooplai-zh.git" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Summary
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          1 从函数到简单对象
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        1 从函数到简单对象
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    1.1 有状态函数与对象模式
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-scheme" class="md-nav__link">
+    1.2 Scheme中的（第一种）简单对象系统
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    1.3 构造对象
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14" class="md-nav__link">
+    1.4 动态分发
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15" class="md-nav__link">
+    1.5 错误处理
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chap2/" class="md-nav__link">
+        2 寻找Self
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chap3/" class="md-nav__link">
+        3 对象的好处和局限性
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chap4/" class="md-nav__link">
+        4 转发和委托
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chap5/" class="md-nav__link">
+        5 类
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chap6/" class="md-nav__link">
+        6 继承
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chap7/" class="md-nav__link">
+        7 充满可能的世界
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    1.1 有状态函数与对象模式
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-scheme" class="md-nav__link">
+    1.2 Scheme中的（第一种）简单对象系统
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    1.3 构造对象
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14" class="md-nav__link">
+    1.4 动态分发
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15" class="md-nav__link">
+    1.5 错误处理
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="1">1 从函数到简单对象</h1>
+<p>对面向对象编程语言的探索从我们于PLAI（<a href="https://www.gitbook.com/read/book/lotuc/plai-cn">《编程语言：应用和解释》</a>）中所学到的、以及对于什么是对象的直觉开始。</p>
+<h2 id="11">1.1 有状态函数与对象模式</h2>
+<p>对象的目的是，将状态（可能但不一定是可变的）连同依赖于该状态的行为一起封装在一致的整体中。这里的状态通常被称为<strong>字段</strong>(field)（或<strong>实例变量</strong>(instance variable)），而行为是以<strong>方法</strong>(method)的形式提供。调用方法通常被称为<strong>消息传递</strong>(message passing)：发送消息给对象，如果它理解了，就执行相关的方法。</p>
+<p>在Scheme这样的高级编程语言中，我们看到过类似的东西：</p>
+<pre><code class="language-Racket">(define add
+  (λ (n)
+    (λ (m)
+      (+ m n))))
+
+&gt; (define add2 (add 2))
+&gt; (add2 5)
+7
+</code></pre>
+<p>函数add2封装了隐藏状态（<code>n = 2</code>），其行为也依赖于该状态。所以从某种意义上说，闭包是一种对象，他的字段是（函数体中的）<strong>自由变量</strong>。那么其行为呢？好吧，闭包只有一个行为，通过函数<strong>调用</strong>触发（从消息传递的角度来看，apply(调用)是函数能理解的唯一消息）。</p>
+<p>如果语言支持赋值（<code>set!</code>），那么我们就得到了有状态的函数，可以改变状态：</p>
+<pre><code class="language-Racket">(define counter
+  (let ([count 0])
+    (λ ()
+      (begin
+        (set! count (add1 count))
+        count))))
+</code></pre>
+<p>现在我们可以观察到count状态的变化：</p>
+<pre><code class="language-Racket">&gt; (counter)
+1
+&gt; (counter)
+2
+</code></pre>
+<p>现在，如果我们想要双向计数器呢？该函数必须能够在其状态上执行+1或者-1，取决于……好吧，参数！</p>
+<pre><code class="language-Racket">(define counter
+  (let ([count 0])
+    (λ (cmd)
+      (case cmd
+        [(dec) (begin
+                 (set! count (sub1 count))
+                 count)]
+        [(inc) (begin
+                 (set! count (add1 count))
+                 count)]))))
+</code></pre>
+<p>请注意counter如何使用cmd来区分要执行的操作。</p>
+<pre><code class="language-Racket">&gt; (counter 'inc)
+1
+&gt; (counter 'dec)
+0
+</code></pre>
+<p>这看起来很像有两个方法和一个实例变量的对象，不是吗？ 我们再来看一个例子，堆栈。</p>
+<pre><code class="language-Racket">(define stack
+  (let ([vals '()])
+    (define (pop)
+      (if (empty? vals)
+          (error &quot;cannot pop from an empty stack&quot;) ;无法从空栈中pop
+          (let ([val (car vals)])
+            (set! vals (cdr vals))
+            val)))
+
+    (define (push val)
+      (set! vals (cons val vals)))
+
+    (define (peek)
+      (if (empty? vals)
+          (error &quot;cannot peek from an empty stack&quot;) ;无法从空栈中peek
+          (car vals)))
+
+    (λ (cmd . args)
+      (case cmd
+        [(pop) (pop)]
+        [(push) (push (car args))]
+        [(peek) (peek)]
+        [else (error &quot;invalid command&quot;)])))) ;无效的命令
+</code></pre>
+<p>这里，我们没有直接在lambda中编写方法体，而是使用了内层的define。另外请注意，我们在lambda的参数中使用了点符号：这样函数就能够接收一个参数（cmd）以及零或多个额外参数（以链表形式在函数体中绑定到args）。</p>
+<p>试试看：</p>
+<pre><code class="language-Racket">&gt; (stack 'push 1)
+&gt; (stack 'push 2)
+&gt; (stack 'pop)
+2
+&gt; (stack 'peek)
+1
+&gt; (stack 'pop)
+1
+&gt; (stack 'pop)
+cannot pop from an empty stack
+</code></pre>
+<p>这代码的模式已经很明显了，可以用来定义类似于对象的抽象。更明确地抽象此模式：</p>
+<pre><code class="language-Racket">(define point
+  (let ([x 0])
+    (let ([methods (list (cons 'x? (λ () x))
+                         (cons 'x! (λ (nx) (set! x nx))))])
+    (λ (msg . args)
+      (apply (cdr (assoc msg methods)) args)))))
+</code></pre>
+<p>请注意这里定义的λ，它以一种通用的方式将消息分发到正确的方法。我们首先把所有的方法都放在一个关联链表（即元素为pair的链表）中，将符号（也就是消息）关联到相应的方法。当调用point时，我们（用assoc）查找消息，得到相应的方法。然后调用它。</p>
+<pre><code class="language-Racket">&gt; (point 'x! 6)
+&gt; (point 'x?)
+6
+</code></pre>
+<h2 id="12-scheme">1.2 Scheme中的（第一种）简单对象系统</h2>
+<p>我们可以用宏在Scheme中嵌入一个遵循上面确定的模式的简单对象系统。</p>
+<blockquote>
+<p>请注意，在本书中我们使用<a href="../defmac.rkt">defmac</a>来定义宏。defmac类似于<code>define-syntax-rule</code>，但是它还支持关键字参数，外加标识符捕获（通过<code>#:keywords</code>和<code>#:captures</code>可选参数）。</p>
+</blockquote>
+<pre><code class="language-Racket">(defmac (OBJECT ([field fname init] ...)
+                ([method mname args body] ...))
+  #:keywords field method
+  (let ([fname init] ...)
+    (let ([methods (list (cons 'mname (λ args body)) ...)])
+      (λ (msg . vals)
+        (apply (cdr (assoc msg methods)) vals)))))
+</code></pre>
+<p>我们还可以定义箭头<code>-&gt;</code>符号表示发送消息给对象，例如<code>(-&gt; st push 3)</code>：</p>
+<pre><code class="language-Racket">(defmac (-&gt; o m arg ...)
+  (o 'm arg ...))
+</code></pre>
+<p>现在就可以使用这个对象系统来定义二维点对象了：</p>
+<pre><code class="language-Racket">(define p2D
+  (OBJECT
+   ([field x 0]
+    [field y 0])
+   ([method x? () x]
+    [method y? () y]
+    [method x! (nx) (set! x nx)]
+    [method y! (ny) (set! y ny)])))
+</code></pre>
+<p>这么使用：</p>
+<pre><code class="language-Racket">&gt; (-&gt; p2D x! 15)
+&gt; (-&gt; p2D y! 20)
+&gt; (-&gt; p2D x?)
+15
+&gt; (-&gt; p2D y?)
+20
+</code></pre>
+<h2 id="13">1.3 构造对象</h2>
+<p>到目前为止，我们的对象都是作为独立样本被创建。如果我们想要多个点对象，每个可以有不同的初始坐标呢？</p>
+<p>在函数式编程的语境中，我们知道如何正确地创建各种类似的函数：使用高阶函数，带上合适的参数，其作用是返回我们想要的特定实例。例如，从前面定义的add函数中，我们可以获得各种单参数加法函数：</p>
+<pre><code class="language-Racket">&gt; (define add4 (add 4))
+&gt; (define add5 (add 5))
+&gt; (add4 1)
+5
+&gt; (add5 1)
+6
+</code></pre>
+<p>因为我们的简单对象系统根植于Scheme，所以可以简单地使用高阶函数来定义<strong>对象工厂</strong>（object factory）：</p>
+<blockquote>
+<p>JavaScript，AmbientTalk</p>
+</blockquote>
+<pre><code class="language-Racket">(define (make-point init-x init-y)
+  (OBJECT
+   ([field x init-x]
+    [field y init-y])
+   ([method x? () x]
+    [method y? () y]
+    [method x! (new-x) (set! x new-x)]
+    [method y! (new-y) (set! y new-y)])))
+</code></pre>
+<p><code>make-point</code>函数的参数是初始坐标，返回新创建的、正确地初始化后的对象。</p>
+<pre><code class="language-Racket">&gt; (let ([p1 (make-point 5 5)]
+        [p2 (make-point 10 10)])
+    (-&gt; p1 x! (-&gt; p2 x?))
+    (-&gt; p1 x?))
+
+10
+</code></pre>
+<h2 id="14">1.4 动态分发</h2>
+<p>我们的简单对象系统就足以展示面向对象编程的基本特性：动态分发。请注意，在下面的代码中，node（节点）将sum消息发送给每个子节点，并不知道它们是leaf（叶节点）还是node：</p>
+<pre><code class="language-Racket">(define (make-node l r)
+ (OBJECT
+  ([field left l]
+   [field right r])
+  ([method sum () (+ (-&gt; left sum) (-&gt; right sum))])))
+
+(define (make-leaf v)
+ (OBJECT
+  ([field value v])
+  ([method sum () value])))
+
+
+&gt; (let ([tree (make-node
+               (make-node (make-leaf 3)
+                          (make-node (make-leaf 10)
+                                     (make-leaf 4)))
+               (make-leaf 1))])
+   (-&gt; tree sum))
+
+18
+</code></pre>
+<p>尽管看起来很简单，这个对象系统已经足以说明对象的基本抽象机制，以及它和抽象数据类型（abstract data type）的区别。参见<a href="../chap3/">第三章</a>。</p>
+<h2 id="15">1.5 错误处理</h2>
+<p>让我们看看，如果发送消息给不知道如何处理它的对象会发生什么：</p>
+<pre><code class="language-Racket">&gt; (let ([l (make-leaf 2)])
+    (-&gt; l print))
+cdr: contract violation
+  expected: pair?
+  given: #f
+</code></pre>
+<p>这个错误信息很糟糕——它将我们的实现策略暴露给程序员，而且没有提示问题在哪。</p>
+<p>我们可以改变OBJECT语法抽象的定义，正确地处理未知消息：</p>
+<pre><code class="language-Racket">(defmac (OBJECT ([field fname init] ...)
+                ([method mname args body] ...))
+  #:keywords field method
+  (let ([fname init] ...)
+    (let ([methods (list (cons 'mname (λ args body)) ...)])
+      (λ (msg . vals)
+        (let ([found (assoc msg methods)])
+          (if found
+              (apply (cdr found) vals)
+              (error &quot;message not understood:&quot; msg))))))) ;未知的消息
+</code></pre>
+<p>我们不再假设在对象的方法表中会有消息关联的方法，而是首先查找并将结果绑定到found；如果找不到方法，found将会是#f。在这种情况下，我们给出有意义的错误信息。</p>
+<p>确实好多了：</p>
+<pre><code class="language-Racket">&gt; (let ([l (make-leaf 2)])
+    (-&gt; l print))
+message not understood: print
+</code></pre>
+<p>本章，我们成功地在Scheme中嵌入了一个简单的对象系统，它显示了词法作用域的一等函数和对象之间的连接。但是，我们还远没有完成，目前的对象系统仍然不完整且非常原始。</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.efa0ade1.min.js"></script>
+      
+        <script src="../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
