@@ -1,8 +1,12 @@
 # [面对对象编程语言：应用和解释](https://users.dcc.uchile.cl/~etanter/ooplai/)
 
-作者 Éric Tanter
+## 作者
+Éric Tanter
 
-译者 MrMathematica、lotuc
+## 译者
+
+- [MrMathematica](https://github.com/mrmathematica)
+- [lotuc](https://github.com/lotuc)
 
 2017 年版
 
@@ -16,3 +20,11 @@ Krishnamurthi
 Ricardo Honorato，他们发现了错误并提出了改进建议。
 
 本翻译版权属于译者
+
+### 编译发布
+
+内容通过
+[mkdocs](https://github.com/mkdocs/mkdocs)（[mkdocs-material](https://github.com/squidfunk/mkdocs-material)
+主题）编译生成 html 进行发布。
+
+发布在 [OOPLAI-zh](https://mrmathematica.github.io/ooplai-zh/).
