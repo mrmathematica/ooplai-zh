@@ -194,6 +194,21 @@
   
   
     <li class="md-nav__item">
+      <a href="../chap0/" class="md-nav__link">
+        前言
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../chap1/" class="md-nav__link">
         1 从函数到简单对象
       </a>
@@ -210,7 +225,7 @@
   
     <li class="md-nav__item">
       <a href="../chap2/" class="md-nav__link">
-        2 寻找Self
+        2 寻找 Self
       </a>
     </li>
   
@@ -315,7 +330,7 @@
       
         <li class="md-nav__item">
   <a href="#44-self" class="md-nav__link">
-    4.4 Self的延迟绑定与模块化
+    4.4 Self 的延迟绑定与模块化
   </a>
   
 </li>
@@ -463,7 +478,7 @@
       
         <li class="md-nav__item">
   <a href="#44-self" class="md-nav__link">
-    4.4 Self的延迟绑定与模块化
+    4.4 Self 的延迟绑定与模块化
   </a>
   
 </li>
@@ -508,7 +523,8 @@
 
 
 <h1 id="4">4 转发和委托</h1>
-<p>如果一个对象不知道如何处理某条消息，总是可以通过发送消息的方式将其转发给另一个对象。在我们的简单对象系统中，可以这么做：</p>
+<p>如果一个对象不知道如何处理某条消息，总是可以通过发送消息的方式将其转发给另一个对
+象。在我们的简单对象系统中，可以这么做：</p>
 <pre><code class="language-Racket">(define seller
  (OBJECT ()
   ([method price (prod)
@@ -528,13 +544,19 @@
 &gt; (-&gt; broker price 2)
 200
 </code></pre>
-<p>对象<code>broker</code>(中间商)不知道如何计算产品(<code>prod</code>，product)的价格(price)，但它可以声称自己能提供价格信息，而其做法就是实现一个方法处理<code>price</code>消息，然后是简单地将消息转发给<code>seller</code>(卖方)，由<code>seller</code>实现所需的行为。请注意，<code>broker</code>在其<code>provider</code>(供应商)字段中保有对seller的引用。这是典型的对象组合的例子，通过消息转发实现。</p>
-<p>现在我们可以看到这种方法的问题了：消息的转发必须显式给出，对于每种我们预计可能发送给<code>broker</code>的消息，都必须定义一个负责转发到<code>seller</code>的方法。例如：</p>
+<p>对象<code>broker</code>(中间商)不知道如何计算产品(<code>prod</code>，product)的价格(price)，但它可以声
+称自己能提供价格信息，而其做法就是实现一个方法处理<code>price</code>消息，然后是简单地将消
+息转发给<code>seller</code>(卖方)，由<code>seller</code>实现所需的行为。请注意，<code>broker</code>在
+其<code>provider</code>(供应商)字段中保有对 seller 的引用。这是典型的对象组合的例子，通过消
+息转发实现。</p>
+<p>现在我们可以看到这种方法的问题了：消息的转发必须显式给出，对于每种我们预计可能发
+送给<code>broker</code>的消息，都必须定义一个负责转发到<code>seller</code>的方法。例如：</p>
 <pre><code class="language-Racket">&gt; (-&gt; broker unit)
 message not understood: unit
 </code></pre>
 <h2 id="41">4.1 消息转发</h2>
-<p>我们可以做得更好，让每个对象都有一个特殊的“伙伴”对象，任何不理解的消息都自动转发给它。可以定义新的语法抽象<code>OBJECT-FWD</code>用于构造这样的对象：</p>
+<p>我们可以做得更好，让每个对象都有一个特殊的“伙伴”对象，任何不理解的消息都自动转发
+给它。可以定义新的语法抽象<code>OBJECT-FWD</code>用于构造这样的对象：</p>
 <pre><code class="language-Racket">(defmac (OBJECT-FWD target
                     ([field fname init] ...)
                     ([method mname args body] ...))
@@ -550,7 +572,9 @@ message not understood: unit
                         (apply target msg vals))))))])
     self))
 </code></pre>
-<p>请注意这里语法的扩展，指定了<code>target</code>对象；只要某条消息在对象的方法中找不到，调度过程就会使用<code>target</code>对象。当然，如果所有对象都将未知消息转发给其他对象，那么传递链中必须有个最后的对象，该对象在收到消息时可以简单报错：</p>
+<p>请注意这里语法的扩展，指定了<code>target</code>对象；只要某条消息在对象的方法中找不到，调度
+过程就会使用<code>target</code>对象。当然，如果所有对象都将未知消息转发给其他对象，那么传递
+链中必须有个最后的对象，该对象在收到消息时可以简单报错：</p>
 <pre><code class="language-Racket">(define root
   (λ (msg . args)
     (error &quot;not understood&quot; msg)))
@@ -559,7 +583,8 @@ message not understood: unit
 <pre><code class="language-Racket">(define broker
   (OBJECT-FWD seller () ()))
 </code></pre>
-<p>这就是说，<code>broker</code>是个空对象（不含字段，不含方法），只是将所有发送给它的消息转发给<code>seller</code>：</p>
+<p>这就是说，<code>broker</code>是个空对象（不含字段，不含方法），只是将所有发送给它的消息转发
+给<code>seller</code>：</p>
 <pre><code class="language-Racket">&gt; (-&gt; broker price 2)
 200
 &gt; (-&gt; broker unit)
@@ -567,25 +592,39 @@ message not understood: unit
 </code></pre>
 <p>这种对象通常被称为<strong>代理</strong>（proxy）。</p>
 <h2 id="42">4.2 委托</h2>
-<p>假设我们想用<code>broker</code>来<strong>改善</strong> <code>seller</code>的行为；比方说，我们希望通过改变价格计算中使用的单位，来使每个产品的价格加倍。这很简单：我们只需要在<code>broker</code>中定义方法<code>unit</code>(单位)：</p>
+<p>假设我们想用<code>broker</code>来<strong>改善</strong> <code>seller</code>的行为；比方说，我们希望通过改变价格计算
+中使用的单位，来使每个产品的价格加倍。这很简单：我们只需要在<code>broker</code>中定义方
+法<code>unit</code>(单位)：</p>
 <pre><code class="language-Racket">(define broker
   (OBJECT-FWD seller ()
    ([method unit () 2])))
 </code></pre>
-<p>有了这个定义，我们应该确保向<code>broker</code>询问某个产品的价格是向<code>seller</code>询问同样产品价格的两倍：</p>
+<p>有了这个定义，我们应该确保向<code>broker</code>询问某个产品的价格是向<code>seller</code>询问同样产品价
+格的两倍：</p>
 <pre><code class="language-Racket">&gt; (-&gt; broker price 1)
 100
 </code></pre>
-<p>嗯……这样不行！看来，一旦我们把<code>price</code>消息转发给<code>seller</code>，控制权将不再能流回<code>broker</code>；这里也即，<code>seller</code>发给<code>self</code>的<code>unit</code>消息<strong>不会</strong>被<code>broker</code>收到。</p>
-<p>让我们考虑一下这是为什么。在<code>seller</code>中<code>self</code>绑定到哪个对象？<code>seller</code>！请记住，我们之前说过（参见<a href="../chap2/">寻找Self</a>），在我们的方法中，<code>self</code>是<strong>静态绑定</strong>的：当对象被创建时，<code>self</code>指向正被定义的对象/闭包，并且将始终绑定该值。这是因为<code>letrec</code>和<code>let</code>一样，遵从词法作用域。</p>
-<p>我们正在寻找的则是另一种语义，称为<strong>委托</strong>（delegation）。委托要求对象中的<code>self</code> <strong>动态绑定</strong>：它应该始终指向最初接收消息的对象。在我们的例子中，这将确保当<code>seller</code>向<code>self</code>发送<code>unit</code>消息时，<code>self</code>指向<code>broker</code>，这样<code>broker</code>中新定义的<code>unit</code>将会生效。在这种情况下，我们说<code>seller</code>是<code>broker</code>的<strong>父对象</strong>（parent），<code>broker</code>委托父对象处理消息。</p>
-<p>怎样绑定标识符，能使其指向使用位置的值，而不是定义位置？在语言不提供动态作用域绑定指令的情况下，唯一可以实现这一点的方法是将该值作为参数传递。所以，必须给方法增加参数，新参数指向实际的接收方(receiver)。因此，不再从静态作用域中捕获<code>self</code>标识符，我们添加<code>self</code>参数。</p>
+<p>嗯……这样不行！看来，一旦我们把<code>price</code>消息转发给<code>seller</code>，控制权将不再能流
+回<code>broker</code>；这里也即，<code>seller</code>发给<code>self</code>的<code>unit</code>消息<strong>不会</strong>被<code>broker</code>收到。</p>
+<p>让我们考虑一下这是为什么。在<code>seller</code>中<code>self</code>绑定到哪个对象？<code>seller</code>！请记住，我
+们之前说过（参见<a href="../chap2/">寻找 Self</a>），在我们的方法中，<code>self</code>是<strong>静态绑
+定</strong>的：当对象被创建时，<code>self</code>指向正被定义的对象/闭包，并且将始终绑定该值。这是
+因为<code>letrec</code>和<code>let</code>一样，遵从词法作用域。</p>
+<p>我们正在寻找的则是另一种语义，称为<strong>委托</strong>（delegation）。委托要求对象中的<code>self</code>
+<strong>动态绑定</strong>：它应该始终指向最初接收消息的对象。在我们的例子中，这将确保
+当<code>seller</code>向<code>self</code>发送<code>unit</code>消息时，<code>self</code>指向<code>broker</code>，这样<code>broker</code>中新定义
+的<code>unit</code>将会生效。在这种情况下，我们说<code>seller</code>是<code>broker</code>的<strong>父对象</strong>（parent）
+，<code>broker</code>委托父对象处理消息。</p>
+<p>怎样绑定标识符，能使其指向使用位置的值，而不是定义位置？在语言不提供动态作用域绑
+定指令的情况下，唯一可以实现这一点的方法是将该值作为参数传递。所以，必须给方法增
+加参数，新参数指向实际的接收方(receiver)。因此，不再从静态作用域中捕获<code>self</code>标识
+符，我们添加<code>self</code>参数。</p>
 <p>具体说来，这意味着<code>seller</code>中这个方法：</p>
 <pre><code class="language-Racket">(λ (prod) .... (-&gt; self unit) ....)
 </code></pre>
 <p>必须改为：</p>
 <blockquote>
-<p>有没有想过为什么Python中的方法必须显式地接受self作为第一个参数？</p>
+<p>有没有想过为什么 Python 中的方法必须显式地接受 self 作为第一个参数？</p>
 </blockquote>
 <pre><code class="language-Racket">(λ (self)
   (λ (prod)....(-&gt; self unit)....))
@@ -608,15 +647,25 @@ message not understood: unit
                 (apply ((cdr found) current) vals)
                 (apply (parent current) msg vals))))))))
 </code></pre>
-<p>有几地方改动了：首先，<code>target</code>更名为<code>parent</code>，以明确我们定义的是委托语义。其次，如上所述，所有的方法现在都是带上了<code>self</code>参数。请注意，我们完全摆脱了<code>letrec</code>！这是因为<code>letrec</code>本来的用途就是允许对象引用<code>self</code>，同时遵循词法作用域。我们已经看到，对于委托来说，我们并不想要词法作用域。</p>
-<p>这意味着，当我们在方法字典中找到某个方法时，必须首先将实际的接收方作为参数传给它。我们如何获得接收方？唯一的可能就是，给对象也加上参数，新参数是调用其方法时必须使用的当前接收方。也就是说，对象构造器返回的值不再是“<code>λ (msg . vals) ....</code>”，而是“<code>λ (rcvr) ....</code>”。“当前接收方”是我们的对象的参数。同样，如果某个消息不能被给定的对象所理解，那么它必须把当前接收者一起发送给它的父对象。</p>
+<p>有几地方改动了：首先，<code>target</code>更名为<code>parent</code>，以明确我们定义的是委托语义。其次，
+如上所述，所有的方法现在都是带上了<code>self</code>参数。请注意，我们完全摆脱了<code>letrec</code>！这
+是因为<code>letrec</code>本来的用途就是允许对象引用<code>self</code>，同时遵循词法作用域。我们已经看到
+，对于委托来说，我们并不想要词法作用域。</p>
+<p>这意味着，当我们在方法字典中找到某个方法时，必须首先将实际的接收方作为参数传给它
+。我们如何获得接收方？唯一的可能就是，给对象也加上参数，新参数是调用其方法时必须
+使用的当前接收方。也就是说，对象构造器返回的值不再是“<code>λ (msg . vals) ....</code>”，而
+是“<code>λ (rcvr) ....</code>”。“当前接收方”是我们的对象的参数。同样，如果某个消息不能被给
+定的对象所理解，那么它必须把当前接收者一起发送给它的父对象。</p>
 <p>这样我们还有最后一个问题要解决：如何向对象发送消息？回忆一下，<code>-&gt;</code>的定义是：</p>
 <pre><code class="language-Racket">(defmac (-&gt; o m arg ...)
   (o 'm arg ...))
 </code></pre>
-<p>但是现在我们不能简单地把<code>o</code>当做函数来调用，传给它一个符号（消息）和可变数量的参数。现在，对象是形式为<code>(λ (rcvr) (λ (msg . args) ....))</code>的函数。所以在传递消息和参数之前，我们必须指定哪个对象是当前的接收方。好吧，这很容易，因为在我们发送消息的时候，当前的接收方应该是……接受消息的对象！</p>
+<p>但是现在我们不能简单地把<code>o</code>当做函数来调用，传给它一个符号（消息）和可变数量的参
+数。现在，对象是形式为<code>(λ (rcvr) (λ (msg . args) ....))</code>的函数。所以在传递消息和
+参数之前，我们必须指定哪个对象是当前的接收方。好吧，这很容易，因为在我们发送消息
+的时候，当前的接收方应该是……接受消息的对象！</p>
 <blockquote>
-<p>为什么这里需要let绑定？</p>
+<p>为什么这里需要 let 绑定？</p>
 </blockquote>
 <pre><code class="language-Racket">(defmac (-&gt; o m arg ...)
   (let ([obj o])
@@ -643,10 +692,21 @@ message not understood: unit
 200
 </code></pre>
 <h2 id="43">4.3 用原型编程</h2>
-<p>具有类似我们在本章中介绍的委托机制的基于对象的语言被称为<strong>基于原型的语言</strong>（prototype），例如Self，JavaScript和AmbientTalk等等。这些语言擅长什么？如何使用原型编程？</p>
+<p>具有类似我们在本章中介绍的委托机制的基于对象的语言被称为<strong>基于原型的语
+言</strong>（prototype），例如 Self，JavaScript 和 AmbientTalk 等等。这些语言擅长什么？
+如何使用原型编程？</p>
 <h3 id="431">4.3.1 单例和特殊对象</h3>
-<p>由于对象可以无中生有地创建（即，用类似于<code>OBJECT-DEL</code>的对象字面表达式创建），所以自然地可以创建只包含一个实例的类型的对象实例。与基于类的语言需要一个特定的设计模式（称为单例(Singleton)）相反，基于对象的语言非常适合这种情况，也适合创建“特殊”对象（下面会详细介绍）。</p>
-<p>我们先来考虑布尔值的面向对象表示和简单的<code>if-then-else</code>控制结构。有多少种布尔值？只有两个：真和假。所以我们可以创建两个独立的对象，<code>true</code>和<code>false</code>来表示它们。在像Self和Smalltalk这样的纯面向对象的语言中，像<code>if-then-else</code>，<code>while</code>等这样的控制结构在语言中不是基本指令。相反，它们被定义为某些对象的方法。我们来考虑<code>if-then-else</code>的情况。我们可以给一个布尔值传两个thunk（译注，无参数的lambda，即<code>(lambda () ...)</code>），一个真thunk和一个假thunk；如果布尔值<strong>是</strong>true，它会调用真thunk；如果它<strong>是</strong>false，它会调用假thunk。</p>
+<p>由于对象可以无中生有地创建（即，用类似于<code>OBJECT-DEL</code>的对象字面表达式创建），所以
+自然地可以创建只包含一个实例的类型的对象实例。与基于类的语言需要一个特定的设计模
+式（称为单例(Singleton)）相反，基于对象的语言非常适合这种情况，也适合创建“特殊”
+对象（下面会详细介绍）。</p>
+<p>我们先来考虑布尔值的面向对象表示和简单的<code>if-then-else</code>控制结构。有多少种布尔值？
+只有两个：真和假。所以我们可以创建两个独立的对象，<code>true</code>和<code>false</code>来表示它们。在
+像 Self 和 Smalltalk 这样的纯面向对象的语言中，像<code>if-then-else</code>，<code>while</code>等这样的
+控制结构在语言中不是基本指令。相反，它们被定义为某些对象的方法。我们来考
+虑<code>if-then-else</code>的情况。我们可以给一个布尔值传两个 thunk（译注，无参数的
+lambda，即<code>(lambda () ...)</code>），一个真 thunk 和一个假 thunk；如果布尔
+值<strong>是</strong>true，它会调用真 thunk；如果它<strong>是</strong>false，它会调用假 thunk。</p>
 <pre><code class="language-Racket">(define true
   (OBJECT-DEL root ()
     ([method ifTrueFalse (t f) (t)])))
@@ -672,9 +732,12 @@ message not understood: unit
                                  (λ () &quot;灯关了&quot;))
 &quot;灯开了&quot;
 </code></pre>
-<p>对象<code>true</code>和<code>false</code>是布尔值的唯二表示。任何依赖某个表达式为真或假的条件机制都可以类似地定义为这两个对象的方法。这就是动态分发！</p>
-<p>Smalltalk中的布尔值和控制结构就是这么定义的，不过，由于Smalltalk是基于类的语言，它们的定义更加复杂些。用你最喜欢的基于类的语言来试试看。</p>
-<p>我们再来看一个基于对象语言的实用例子：特殊（exceptional）对象。先来回顾一下普通点对象的定义，一般是调用工厂函数<code>make-point</code>创建的：</p>
+<p>对象<code>true</code>和<code>false</code>是布尔值的唯二表示。任何依赖某个表达式为真或假的条件机制都可
+以类似地定义为这两个对象的方法。这就是动态分发！</p>
+<p>Smalltalk 中的布尔值和控制结构就是这么定义的，不过，由于 Smalltalk 是基于类的语
+言，它们的定义更加复杂些。用你最喜欢的基于类的语言来试试看。</p>
+<p>我们再来看一个基于对象语言的实用例子：特殊（exceptional）对象。先来回顾一下普通
+点对象的定义，一般是调用工厂函数<code>make-point</code>创建的：</p>
 <pre><code class="language-Racket">(define (make-point x-init y-init)
   (OBJECT-DEL root
     ([field x x-init]
@@ -682,15 +745,19 @@ message not understood: unit
     ([method x? () x]
      [method y? () y])))
 </code></pre>
-<p>假设我们要引入一个特殊的点对象，它的特殊性在于坐标是<strong>随机的</strong>，每次访问都会改变。我们可以简单地定义<code>random-point</code>为一个独立的对象，其<code>x?</code>和<code>y?</code>方法执行计算而不是访问存储的状态：</p>
+<p>假设我们要引入一个特殊的点对象，它的特殊性在于坐标是<strong>随机的</strong>，每次访问都会改变
+。我们可以简单地定义<code>random-point</code>为一个独立的对象，其<code>x?</code>和<code>y?</code>方法执行计算而不
+是访问存储的状态：</p>
 <pre><code class="language-Racket">(define random-point
   (OBJECT-DEL root ()
     ([method x? () (* 10 (random))]
      [method y? () (-&gt; self x?)])))
 </code></pre>
-<p>请注意，<code>random-point</code>没有声明任何字段。当然，因为在OOP中我们依赖的是对象的接口，两种表示可以共存。</p>
+<p>请注意，<code>random-point</code>没有声明任何字段。当然，因为在 OOP 中我们依赖的是对象的接
+口，两种表示可以共存。</p>
 <h3 id="432">4.3.2 通过委托共享</h3>
-<p>上面讨论的例子突出了基于对象的语言的优点。现在让我们看看实际使用中的委托。首先，委托可以用来分解对象之间的<strong>共享行为</strong>。考虑这种情况：</p>
+<p>上面讨论的例子突出了基于对象的语言的优点。现在让我们看看实际使用中的委托。首先，
+委托可以用来分解对象之间的<strong>共享行为</strong>。考虑这种情况：</p>
 <pre><code class="language-Racket">(define (make-point x-init y-init)
   (OBJECT-DEL root
     ([field x x-init]
@@ -707,8 +774,11 @@ message not understood: unit
                          (+ (-&gt; self y?)
                             (-&gt; p2 y?)))])))
 </code></pre>
-<p>创建的所有点对象都具有相同的方法，因此这些行为可以移至公共的父对象（通常称为原型）中，以实现共享。所有的行为都应该移到原型中吗？如果我们想要允许点的不同表示，比如前面的随机点（它根本不含任何字段！），就不该这么做。</p>
-<p>因此，我们可以定义<code>point</code>原型，它提取了<code>above</code>和<code>add</code>方法，它们的实现对所有点都是一样的：</p>
+<p>创建的所有点对象都具有相同的方法，因此这些行为可以移至公共的父对象（通常称为原型
+）中，以实现共享。所有的行为都应该移到原型中吗？如果我们想要允许点的不同表示，比
+如前面的随机点（它根本不含任何字段！），就不该这么做。</p>
+<p>因此，我们可以定义<code>point</code>原型，它提取了<code>above</code>和<code>add</code>方法，它们的实现对所有点都
+是一样的：</p>
 <pre><code class="language-Racket">(define point
   (OBJECT-DEL root ()
     ([method above (p2)
@@ -722,9 +792,12 @@ message not understood: unit
                             (-&gt; p2 y?)))])))
 </code></pre>
 <blockquote>
-<p>如果使用的语言支持抽象方法的话，<code>point</code>中这些选择器(accessor)方法可以定义为抽象(abstract)的。Smalltalk就可以这么做，这种方法被调用的话就会抛出异常。</p>
+<p>如果使用的语言支持抽象方法的话，<code>point</code>中这些选择器(accessor)方法可以定义为抽
+象(abstract)的。Smalltalk 就可以这么做，这种方法被调用的话就会抛出异常。</p>
 </blockquote>
-<p>请注意，作为一个独立的对象，<code>point</code>没有意义，因为它给自己发送自已也不理解的消息。但它可以作为原型，其他点可以扩展之。比如用<code>make-point</code>创建的普通点，包含字段<code>x</code>和<code>y</code>：</p>
+<p>请注意，作为一个独立的对象，<code>point</code>没有意义，因为它给自己发送自已也不理解的消息
+。但它可以作为原型，其他点可以扩展之。比如用<code>make-point</code>创建的普通点，包含字
+段<code>x</code>和<code>y</code>：</p>
 <pre><code class="language-Racket">(define (make-point x-init y-init)
   (OBJECT-DEL point
     ([field x x-init]
@@ -744,7 +817,8 @@ message not understood: unit
 &gt; (-&gt; (-&gt; p2 above p1) x?)
 8.90016724570533
 </code></pre>
-<p>同样，我们可以用委托来共享对象之间的<strong>状态</strong>。例如，考虑一组共享相同x坐标的点：</p>
+<p>同样，我们可以用委托来共享对象之间的<strong>状态</strong>。例如，考虑一组共享相同 x 坐标的点
+：</p>
 <pre><code class="language-Racket">(define 1D-point
   (OBJECT-DEL point
     ([field x 5])
@@ -757,7 +831,8 @@ message not understood: unit
     ([method y? () y]
      [method y! (ny) (set! y ny)])))
 </code></pre>
-<p>所有由<code>make-point-shared</code>创建的对象共享同一个父对象<code>1D-point</code>，由它决定<code>x</code>坐标。如果改变<code>1D-point</code>，自然会反映到所有子对象上：</p>
+<p>所有由<code>make-point-shared</code>创建的对象共享同一个父对象<code>1D-point</code>，由它决定<code>x</code>坐标。
+如果改变<code>1D-point</code>，自然会反映到所有子对象上：</p>
 <pre><code class="language-Racket">&gt; (define p1 (make-point-shared 2))
 &gt; (define p2 (make-point-shared 4))
 &gt; (-&gt; p1 x?)
@@ -770,17 +845,27 @@ message not understood: unit
 &gt; (-&gt; p2 x?)
 10
 </code></pre>
-<h2 id="44-self">4.4 Self的延迟绑定与模块化</h2>
+<h2 id="44-self">4.4 Self 的延迟绑定与模块化</h2>
 <blockquote>
 <p>参见《<a href="http://www.dreamsongs.com/NewFiles/WhyOfY.pdf">Why of Y</a>》。</p>
 </blockquote>
-<p>在<code>OBJECT-DEL</code>语法抽象的定义中，注意我们在消息发送的定义中使用了自我调用的模式<code>(obj obj)</code>。我们之前也用到过自我调用模式，是在不赋值的情况下实现递归绑定（译注，参见PLAI）。</p>
+<p>在<code>OBJECT-DEL</code>语法抽象的定义中，注意我们在消息发送的定义中使用了自我调用的模
+式<code>(obj obj)</code>。我们之前也用到过自我调用模式，是在不赋值的情况下实现递归绑定（译
+注，参见 PLAI）。</p>
 <blockquote>
-<p>想想C++和Java等主流语言是怎么做的：它们怎么解决可扩展性(extensibility)和脆弱性(fragility)之间的折衷？</p>
+<p>想想 C++和 Java 等主流语言是怎么做的：它们怎么解决可扩展性(extensibility)和脆
+弱性(fragility)之间的折衷？</p>
 </blockquote>
-<p>OOP的这个特性也被称为“开放式递归”（open recursion）：任何子对象都可以重新定义其父对象的（父对象的）方法。当然，这种机制有利于<strong>可扩展性</strong>（extensibility），因为我们可以扩展对象的任何方面，而不必事先预见到需要进行这些扩展。另一方面，开放式递归使得软件变得更加<strong>脆弱</strong>（fragile），因为以不可预见、不正确的方式扩展对象太过容易。想象一下可能出问题的情况，然后考虑可行的替代设计。为了进一步阐明脆弱性，可以考虑对象的黑盒组合情况：有两个对象，各自独立开发，然后把它们放入委托关系中。可能会出什么问题？</p>
+<p>OOP 的这个特性也被称为“开放式递归”（open recursion）：任何子对象都可以重新定义其
+父对象的（父对象的）方法。当然，这种机制有利于<strong>可扩展性</strong>（extensibility），因
+为我们可以扩展对象的任何方面，而不必事先预见到需要进行这些扩展。另一方面，开放式
+递归使得软件变得更加<strong>脆弱</strong>（fragile），因为以不可预见、不正确的方式扩展对象太
+过容易。想象一下可能出问题的情况，然后考虑可行的替代设计。为了进一步阐明脆弱性，
+可以考虑对象的黑盒组合情况：有两个对象，各自独立开发，然后把它们放入委托关系中。
+可能会出什么问题？</p>
 <h2 id="45">4.5 词法作用域和委托</h2>
-<p>正如之前所讨论的，在我们的系统中可以定义<a href="../chap2/#25-嵌套的对象">嵌套的对象</a>。词法嵌套与委托之间的关系蛮有意思的，值得讨论一下。考虑下面的例子：</p>
+<p>正如之前所讨论的，在我们的系统中可以定义<a href="../chap2/#25-嵌套的对象">嵌套的对象</a>。
+词法嵌套与委托之间的关系蛮有意思的，值得讨论一下。考虑下面的例子：</p>
 <pre><code class="language-Racket">(define parent
  (OBJECT-DEL root ()
    ([method foo () 1])))
@@ -801,17 +886,35 @@ message not understood: unit
 &gt; (-&gt; inner get-foo2)
 1
 </code></pre>
-<p>可以看到，自由标识符在词法环境中查找（见<code>get-foo1</code>），未知消息在委托链上进行查找（见<code>get-foo2</code>）。这点需要澄清，因为Java程序员习惯的是<code>this.foo()</code>等同于<code>foo()</code>。在许多同时支持词法嵌套和某种形式的委托（如继承）的语言中，情况并非如此。</p>
+<p>可以看到，自由标识符在词法环境中查找（见<code>get-foo1</code>），未知消息在委托链上进行查找
+（见<code>get-foo2</code>）。这点需要澄清，因为 Java 程序员习惯的是<code>this.foo()</code>等同
+于<code>foo()</code>。在许多同时支持词法嵌套和某种形式的委托（如继承）的语言中，情况并非如
+此。</p>
 <blockquote>
-<p>其他语言对此有不同的处理。参见Newspeak和AmbientTalk。</p>
+<p>其他语言对此有不同的处理。参见 Newspeak 和 AmbientTalk。</p>
 </blockquote>
-<p>Java是怎么处理的？ 试试就知道了！继承链屏蔽（shadow）了词法链：使用<code>foo()</code>时，如果能在超类中找到方法，则会调用该方法；只有在找不到方法时，才使用词法环境（即<code>outer</code>对象中的<code>foo</code>）。因此，对<code>outer</code>对象的引用是非常脆弱的。这就是为什么Java支持额外的语法形式<code>Outer.this</code>来引用外层对象。当然，如果直接外层对象的类中找不到方法，那么就继续在它的超类中查找，而不是往词法链上。</p>
+<p>Java 是怎么处理的？ 试试就知道了！继承链屏蔽（shadow）了词法链：使用<code>foo()</code>时，
+如果能在超类中找到方法，则会调用该方法；只有在找不到方法时，才使用词法环境（
+即<code>outer</code>对象中的<code>foo</code>）。因此，对<code>outer</code>对象的引用是非常脆弱的。这就是为什么
+Java 支持额外的语法形式<code>Outer.this</code>来引用外层对象。当然，如果直接外层对象的类中
+找不到方法，那么就继续在它的超类中查找，而不是往词法链上。</p>
 <h2 id="46">4.6 委托模型</h2>
-<p>我们在这里实现的委托模型只是基于原型的语言的设计空间中的一个点。请自行研究Self，JavaScript和AmbientTalk的文档以了解其设计。你还可以修改我们的对象系统，让其支持不同的模型，比如说JavaScript模型。</p>
+<p>我们在这里实现的委托模型只是基于原型的语言的设计空间中的一个点。请自行研究
+Self，JavaScript 和 AmbientTalk 的文档以了解其设计。你还可以修改我们的对象系统，
+让其支持不同的模型，比如说 JavaScript 模型。</p>
 <h2 id="47">4.7 克隆</h2>
-<p>在我们的语言中（在JavaScript中也是一样），对象都是<strong>无中生有的</strong>创建的：要么从头创建对象，要么我们有个函数，它的作用是为我们执行对象的创建。历史上，基于原型的语言（如Self）提供了另一种创建对象的方法：克隆(clone)现有对象。这种方法类似于我们经常对文本（包括代码！）进行的复制—粘贴—修改操作：从某个类似的对象开始，克隆之，然后修改该克隆（比如说，添加方法，更改字段）。</p>
-<p>当克隆对象和委托同时存在时，就会出现克隆操作是<strong>深</strong>（deep）还是<strong>浅</strong>（shallow）的问题。浅克隆返回的对象和原始对象共享父对象。深克隆返回的对象的父对象是原始对象的父对象的克隆，并依此类推：整个委托链都被克隆。</p>
-<p>这里我们不在详细地研究克隆。然而，你应该思考一下，在我们的语言中支持克隆难易如何。由于对象实际上（通过宏展开）被编译成函数，所以问题归结为闭包的克隆。不幸的是，Scheme不支持此操作。出现了源语言和目标语言之间不匹配的情况（想想PLAI第12章）。甘瓜苦蒂！</p>
+<p>在我们的语言中（在 JavaScript 中也是一样），对象都是<strong>无中生有的</strong>创建的：要么从
+头创建对象，要么我们有个函数，它的作用是为我们执行对象的创建。历史上，基于原型的
+语言（如 Self）提供了另一种创建对象的方法：克隆(clone)现有对象。这种方法类似于我
+们经常对文本（包括代码！）进行的复制—粘贴—修改操作：从某个类似的对象开始，克隆之
+，然后修改该克隆（比如说，添加方法，更改字段）。</p>
+<p>当克隆对象和委托同时存在时，就会出现克隆操作是<strong>深</strong>（deep）还
+是<strong>浅</strong>（shallow）的问题。浅克隆返回的对象和原始对象共享父对象。深克隆返回的对
+象的父对象是原始对象的父对象的克隆，并依此类推：整个委托链都被克隆。</p>
+<p>这里我们不在详细地研究克隆。然而，你应该思考一下，在我们的语言中支持克隆难易如何
+。由于对象实际上（通过宏展开）被编译成函数，所以问题归结为闭包的克隆。不幸的是
+，Scheme 不支持此操作。出现了源语言和目标语言之间不匹配的情况（想想 PLAI 第 12
+章）。甘瓜苦蒂！</p>
 
 
 

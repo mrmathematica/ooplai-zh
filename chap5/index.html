@@ -194,6 +194,21 @@
   
   
     <li class="md-nav__item">
+      <a href="../chap0/" class="md-nav__link">
+        前言
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../chap1/" class="md-nav__link">
         1 从函数到简单对象
       </a>
@@ -210,7 +225,7 @@
   
     <li class="md-nav__item">
       <a href="../chap2/" class="md-nav__link">
-        2 寻找Self
+        2 寻找 Self
       </a>
     </li>
   
@@ -310,10 +325,10 @@
       
         <li class="md-nav__item">
   <a href="#54-scheme" class="md-nav__link">
-    5.4 在Scheme中嵌入类
+    5.4 在 Scheme 中嵌入类
   </a>
   
-    <nav class="md-nav" aria-label="5.4 在Scheme中嵌入类">
+    <nav class="md-nav" aria-label="5.4 在 Scheme 中嵌入类">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -450,10 +465,10 @@
       
         <li class="md-nav__item">
   <a href="#54-scheme" class="md-nav__link">
-    5.4 在Scheme中嵌入类
+    5.4 在 Scheme 中嵌入类
   </a>
   
-    <nav class="md-nav" aria-label="5.4 在Scheme中嵌入类">
+    <nav class="md-nav" aria-label="5.4 在 Scheme 中嵌入类">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -532,9 +547,13 @@
 (define p1 (make-point 0))
 (define p2 (make-point 1))
 </code></pre>
-<p>所有点对象都拥有自己的方法，尽管它们是相同的。至少它们的签名和主体是一样的，对吧？它们<strong>完全</strong>一样吗？事实并非如此。在这个版本的对象系统中，唯一的区别是，方法中包含对象自身：就是说，在<code>p1</code>的方法中，<code>self</code>指向<code>p1</code>，而在<code>p2</code>的方法中它指向<code>p2</code>。换句话说，方法，也就是函数，因所捕捉的词法环境而不同。</p>
+<p>所有点对象都拥有自己的方法，尽管它们是相同的。至少它们的签名和主体是一样的，对吧
+？它们<strong>完全</strong>一样吗？事实并非如此。在这个版本的对象系统中，唯一的区别是，方法中
+包含对象自身：就是说，在<code>p1</code>的方法中，<code>self</code>指向<code>p1</code>，而在<code>p2</code>的方法中它指
+向<code>p2</code>。换句话说，方法，也就是函数，因所捕捉的词法环境而不同。</p>
 <h2 id="51">5.1 共享方法定义</h2>
-<p>为了支持不同的<code>self</code>，就重复所有的方法定义并不合理。将共同部分（方法体）分解出来，将变量（绑定到<code>self</code>的对象）参数化更合理。</p>
+<p>为了支持不同的<code>self</code>，就重复所有的方法定义并不合理。将共同部分（方法体）分解出来
+，将变量（绑定到<code>self</code>的对象）参数化更合理。</p>
 <p>先试试不用宏来实现。回想一下，不使用宏的情况下，点对象的定义如下：</p>
 <pre><code class="language-Racket">(define make-point
   (λ (init-x)
@@ -548,7 +567,12 @@
                     (apply (cdr (assoc msg methods)) args))))])
       self)))
 </code></pre>
-<p>如果将<code>(let ([methods...]))</code>从<code>(λ (init-x) ...)</code>中提取出来，我们就可以实现想要的方法定义的共享。但是这样的话，字段变量就不在方法体的作用域中了。具体地说，在这个例子中，这意味着<code>x</code>在两个方法中都没有绑定。这表明，除了<code>self</code>之外，方法还需要参数化于状态（字段值）之上。不过，好在<code>self</code>可以“持有”状态（它可以捕获其词法环境中的字段绑定）。只要找到通过<code>self</code>能够提取字段值（还有对其赋值）的方法就可以了。为此，我们的对象将支持两个特定的消息<code>-read</code>和<code>-write</code>:</p>
+<p>如果将<code>(let ([methods...]))</code>从<code>(λ (init-x) ...)</code>中提取出来，我们就可以实现想要的
+方法定义的共享。但是这样的话，字段变量就不在方法体的作用域中了。具体地说，在这个
+例子中，这意味着<code>x</code>在两个方法中都没有绑定。这表明，除了<code>self</code>之外，方法还需要参
+数化于状态（字段值）之上。不过，好在<code>self</code>可以“持有”状态（它可以捕获其词法环境中
+的字段绑定）。只要找到通过<code>self</code>能够提取字段值（还有对其赋值）的方法就可以了。为
+此，我们的对象将支持两个特定的消息<code>-read</code>和<code>-write</code>:</p>
 <pre><code class="language-Racket">(define make-point
   (let ([methods (list (cons 'x? (λ (self)
                                     (λ () (self '-read))))
@@ -567,7 +591,9 @@
                        (apply ((cdr (assoc msg methods)) self) args)])))])
       self))))
 </code></pre>
-<p>请仔细研究这里的方法现在是如何参数化于<code>self</code>的，还有，要存取字段现在需要向<code>self</code>发送特殊消息。接下来再研究对象本身的定义：当收到消息时，它首先检查消息是否为<code>-read</code>或<code>-write</code>，如果是的话就进行存取操作。来试试这是否可行：</p>
+<p>请仔细研究这里的方法现在是如何参数化于<code>self</code>的，还有，要存取字段现在需要
+向<code>self</code>发送特殊消息。接下来再研究对象本身的定义：当收到消息时，它首先检查消息是
+否为<code>-read</code>或<code>-write</code>，如果是的话就进行存取操作。来试试这是否可行：</p>
 <pre><code class="language-Racket">(define p1 (make-point 1))
 (define p2 (make-point 2))
 
@@ -578,7 +604,12 @@
 2
 </code></pre>
 <h2 id="52">5.2 访问字段</h2>
-<p>当然，这个定义不怎么通用，因为它只适用于一个字段<code>x</code>。我们需要将其一般化：字段名必须作为参数传给<code>-read</code>和<code>-write</code>消息。问题是，如何用字段名（符号）访问对象的词法环境中的同名变量。一个简单的解决方案是使用某种结构来保存字段值。方法的定义就是这样处理的，保存的是方法名称和方法定义之间的关联。不过，与方法表不同，字段绑定是（至少是潜在）可变的。Racket不支持对关联表进行赋值，所以我们使用字典（更确切地说，哈希表），用<code>dict-ref</code>和<code>dict-set!</code>访问。</p>
+<p>当然，这个定义不怎么通用，因为它只适用于一个字段<code>x</code>。我们需要将其一般化：字段名
+必须作为参数传给<code>-read</code>和<code>-write</code>消息。问题是，如何用字段名（符号）访问对象的词
+法环境中的同名变量。一个简单的解决方案是使用某种结构来保存字段值。方法的定义就是
+这样处理的，保存的是方法名称和方法定义之间的关联。不过，与方法表不同，字段绑定是
+（至少是潜在）可变的。Racket 不支持对关联表进行赋值，所以我们使用字典（更确切地
+说，哈希表），用<code>dict-ref</code>和<code>dict-set!</code>访问。</p>
 <pre><code class="language-Racket">(define make-point
   (let ([methods (list (cons 'x? (λ (self)
                                     (λ () (self '-read 'x))))
@@ -604,13 +635,24 @@
        (p2 'x?)))
 12
 </code></pre>
-<p>请注意<code>make-point</code>现在保存了方法定义的列表，还有，被创建的对象捕获了<code>fields</code>(字段)字典（该字典先初始化，然后返回给对象）。</p>
+<p>请注意<code>make-point</code>现在保存了方法定义的列表，还有，被创建的对象捕获了<code>fields</code>(字
+段)字典（该字典先初始化，然后返回给对象）。</p>
 <h2 id="53">5.3 类</h2>
-<p>虽然我们的确实现了方法定义的共享，但是这个解决方案并不理想。为什么？观察对象的定义（上述<code>(λ (msg . args) ....)</code>的函数体）。在那里实现的逻辑在所有用<code>make-point</code>创建对象中都是重复的：每个对象都有它自己的副本，当它收到<code>-read</code>消息时，在<code>fields</code>字典中查找；<code>-write</code>消息时，更新<code>fields</code>字典；任何其他消息，查找<code>methods</code>表，然后应用对应方法。</p>
-<p>所以说，所有这些逻辑在对象之间都可以共享。对象体中唯一的自由变量是<code>fields</code>和<code>self</code>。换句话说，我们可以把对象定义为它自己外加它的字段，而把所有其他的逻辑都交给<code>make-point</code>函数。这样的话，<code>make-point</code>的功能不再是单一的只负责创建新的对象，还负责处理对字段的访问和对消息的处理。也就是说，<code>make-point</code>演变成所谓的<strong>类</strong>（class）。</p>
-<p>我们如何表示类？目前它只是可以调用的函数（它会创建对象——一个<strong>实例</strong>）；如果需要该函数有不同的行为，我们可以应用本书开始时看到的<a href="../chap1/#11-有状态函数与对象模式">对象模式</a>。</p>
+<p>虽然我们的确实现了方法定义的共享，但是这个解决方案并不理想。为什么？观察对象的定
+义（上述<code>(λ (msg . args) ....)</code>的函数体）。在那里实现的逻辑在所有
+用<code>make-point</code>创建对象中都是重复的：每个对象都有它自己的副本，当它收到<code>-read</code>消
+息时，在<code>fields</code>字典中查找；<code>-write</code>消息时，更新<code>fields</code>字典；任何其他消息，查
+找<code>methods</code>表，然后应用对应方法。</p>
+<p>所以说，所有这些逻辑在对象之间都可以共享。对象体中唯一的自由变量
+是<code>fields</code>和<code>self</code>。换句话说，我们可以把对象定义为它自己外加它的字段，而把所有其
+他的逻辑都交给<code>make-point</code>函数。这样的话，<code>make-point</code>的功能不再是单一的只负责创
+建新的对象，还负责处理对字段的访问和对消息的处理。也就是说，<code>make-point</code>演变成所
+谓的<strong>类</strong>（class）。</p>
+<p>我们如何表示类？目前它只是可以调用的函数（它会创建对象——一个<strong>实例</strong>）；如果需要
+该函数有不同的行为，我们可以应用本书开始时看到
+的<a href="../chap1/#11-有状态函数与对象模式">对象模式</a>。</p>
 <blockquote>
-<p>在某些语言中，类本身就是对象。这方面的范例就是Smalltalk。绝对值得花时间一学！</p>
+<p>在某些语言中，类本身就是对象。这方面的范例就是 Smalltalk。绝对值得花时间一学！</p>
 </blockquote>
 <p>于是：</p>
 <pre><code class="language-Racket">(define Point
@@ -623,10 +665,11 @@
       [(invoke) invoke method])))
 </code></pre>
 <p>这种模式明确了类的作用：它产生对象，调用方法，读取和写入其实例的字段。</p>
-<p>现在，对象的作用是什么？他只需要有标识（identity）功能，知道自己属于哪个类，并记录自己的字段值。它不再自带任何行为。换种说法，对象可以定义为普通的数据结构：</p>
+<p>现在，对象的作用是什么？他只需要有标识（identity）功能，知道自己属于哪个类，并记
+录自己的字段值。它不再自带任何行为。换种说法，对象可以定义为普通的数据结构：</p>
 <pre><code class="language-Racket">(define-struct obj (class values))
 </code></pre>
-<p>接下来看看现在该怎么定义Point类：</p>
+<p>接下来看看现在该怎么定义 Point 类：</p>
 <pre><code class="language-Racket">(define Point
   (let ([methods ....])
     (letrec
@@ -650,12 +693,14 @@
 &gt; (Point 'create)
 #&lt;obj&gt;
 </code></pre>
-<p>要实例化<code>Point</code>类，只需向其发送<code>create</code>消息。现在对象是结构体了，我们需要一种方法来发送消息，还有访问其字段。要向对象<code>p</code>发送消息，先要检索它的类，然后给这个类发送<code>invoke</code>消息：</p>
+<p>要实例化<code>Point</code>类，只需向其发送<code>create</code>消息。现在对象是结构体了，我们需要一种方
+法来发送消息，还有访问其字段。要向对象<code>p</code>发送消息，先要检索它的类，然后给这个类
+发送<code>invoke</code>消息：</p>
 <pre><code class="language-Racket">((obj-class p) 'invoke p 'x?)
 </code></pre>
 <p>访问字段也是类似。</p>
-<h2 id="54-scheme">5.4 在Scheme中嵌入类</h2>
-<p>本节我们使用宏在Scheme中嵌入类。</p>
+<h2 id="54-scheme">5.4 在 Scheme 中嵌入类</h2>
+<p>本节我们使用宏在 Scheme 中嵌入类。</p>
 <h3 id="541">5.4.1 类的宏</h3>
 <p>我们来定义<code>CLASS</code>语法抽象，它负责创建类：</p>
 <pre><code class="language-Racket">(defmac (CLASS ([field f init] ...)
@@ -682,7 +727,8 @@
          class)))
 </code></pre>
 <h3 id="542">5.4.2 辅助语法</h3>
-<p>我们需要引入新的语法定义，以方便地调用方法（<code>-&gt;</code>），还需要引入类似的语法，来访问当前对象的字段（<code>?</code>和<code>!</code>）。</p>
+<p>我们需要引入新的语法定义，以方便地调用方法（<code>-&gt;</code>），还需要引入类似的语法，来访问
+当前对象的字段（<code>?</code>和<code>!</code>）。</p>
 <pre><code class="language-Racket">(defmac (-&gt; o m arg ...)
   (let ((obj o))
     ((obj-class obj) 'invoke obj 'm arg ...)))
@@ -697,7 +743,8 @@
 <pre><code class="language-Racket">(define (new c)
   (c 'create))
 </code></pre>
-<p>这个简单的函数在概念上非常重要：它有助于隐藏类在内部作为函数实现的事实，还隐藏了用于请求类创建实例的符号。</p>
+<p>这个简单的函数在概念上非常重要：它有助于隐藏类在内部作为函数实现的事实，还隐藏了
+用于请求类创建实例的符号。</p>
 <h3 id="543">5.4.3 例子</h3>
 <p>来看类的例子：</p>
 <pre><code class="language-Racket">(define Point
@@ -717,13 +764,20 @@
 0
 </code></pre>
 <h3 id="544">5.4.4 强封装</h3>
-<p>关于字段访问，我们做了个重要的设计决定：字段访问器<code>?</code>和<code>!</code>只能作用于<code>self</code>！即，在我们的语言中不可能访问另一个对象的字段。这被称为具有<strong>强封装</strong>（Strong Encapsulation）对象的语言。Smalltalk就是这样（访问另一个对象的字段实际上是发送消息，因此可以由接收方对象来控制）。Java不是：可以访问任何对象的字段（如果可见性(visibility)允许的话）。我们的<strong>语法</strong>根本不允许访问外部字段。</p>
-<p>这样设计的另一个结果是，字段访问只能出现在方法体<strong>内</strong>：因为接收对象总是<code>self</code>，所以<code>self</code>必须已定义。比如说，试试在对象之外用<code>?</code>读取字段：</p>
+<p>关于字段访问，我们做了个重要的设计决定：字段访问器<code>?</code>和<code>!</code>只能作用于<code>self</code>！即，
+在我们的语言中不可能访问另一个对象的字段。这被称为具有<strong>强封装</strong>（Strong
+Encapsulation）对象的语言。Smalltalk 就是这样（访问另一个对象的字段实际上是发送
+消息，因此可以由接收方对象来控制）。Java 不是：可以访问任何对象的字段（如果可见
+性(visibility)允许的话）。我们的<strong>语法</strong>根本不允许访问外部字段。</p>
+<p>这样设计的另一个结果是，字段访问只能出现在方法体<strong>内</strong>：因为接收对象总是<code>self</code>，
+所以<code>self</code>必须已定义。比如说，试试在对象之外用<code>?</code>读取字段：</p>
 <pre><code class="language-Racket">&gt; (? f)
 self: undefined;
  cannot reference undefined identifier
 </code></pre>
-<p>更好的做法是，上述程序会产生错误，表明<code>?</code>未定义。要做到这一点，我们简单地将<code>?</code>和<code>?</code>定义为<strong>局部</strong>语法形式，只在方法体的内被定义，而不是全局范围内有定义。只要将这些字段访问形式的定义从全局移动到<code>local</code>作用域内，<code>local</code>放在方法定义内：</p>
+<p>更好的做法是，上述程序会产生错误，表明<code>?</code>未定义。要做到这一点，我们简单地
+将<code>?</code>和<code>?</code>定义为<strong>局部</strong>语法形式，只在方法体的内被定义，而不是全局范围内有定义。
+只要将这些字段访问形式的定义从全局移动到<code>local</code>作用域内，<code>local</code>放在方法定义内：</p>
 <pre><code class="language-Racket">(defmac (CLASS ([field f init] ...)
                ([method m params body] ...))
      #:keywords field method
@@ -738,7 +792,8 @@ self: undefined;
                 (letrec
                    ([class (λ (msg . vals) ....)]))))
 </code></pre>
-<p>在方法列表定义的局部作用域内定义语法形式<code>?</code>和<code>!</code>，确保了它们可以在方法体内可用，但在其他地方不可用。</p>
+<p>在方法列表定义的局部作用域内定义语法形式<code>?</code>和<code>!</code>，确保了它们可以在方法体内可用，
+但在其他地方不可用。</p>
 <p>现在，字段访问器方法之外没有定义：</p>
 <pre><code class="language-Racket">&gt; (? f)
 ?: undefined;
@@ -746,11 +801,18 @@ self: undefined;
 </code></pre>
 <p>后文统一使用这种局部的方法。</p>
 <h2 id="55">5.5 初始化</h2>
-<p>我们已经看到，要从类获取对象（即实例化对象）的方法是向类发送<code>create</code>消息。能够给<code>create</code>传递参数，以指定对象的字段的初始值通常是有用的。目前，我们的类系统仅支持在类声明时指定默认字段值。在实例化时没法传递初始字段值。</p>
+<p>我们已经看到，要从类获取对象（即实例化对象）的方法是向类发送<code>create</code>消息。能够
+给<code>create</code>传递参数，以指定对象的字段的初始值通常是有用的。目前，我们的类系统仅支
+持在类声明时指定默认字段值。在实例化时没法传递初始字段值。</p>
 <blockquote>
-<p>初始化方法是Smalltalk编程中的习惯叫法。在Java中，它们被称为构造函数（这可以说是个糟糕的名字，因为我们可以看到，它们并不负责构建对象，只是在实际创建对象之后才对其进行初始化）。</p>
+<p>初始化方法是 Smalltalk 编程中的习惯叫法。在 Java 中，它们被称为构造函数（这可
+以说是个糟糕的名字，因为我们可以看到，它们并不负责构建对象，只是在实际创建对象
+之后才对其进行初始化）。</p>
 </blockquote>
-<p>有几种方法可以做到这一点。一个简单的方法是，要求对象实现<strong>初始化</strong>方法，并让这个类在每个新创建的对象上调用此初始化方法。我们将采用如下约定：如果<code>create</code>消息没有参数，那么我们不调用初始器（因此使用默认值）。如果有参数传入，我们就用这些参数调用初始器（称之为<code>initialize</code>）：</p>
+<p>有几种方法可以做到这一点。一个简单的方法是，要求对象实现<strong>初始化</strong>方法，并让这个
+类在每个新创建的对象上调用此初始化方法。我们将采用如下约定：如果<code>create</code>消息没有
+参数，那么我们不调用初始器（因此使用默认值）。如果有参数传入，我们就用这些参数调
+用初始器（称之为<code>initialize</code>）：</p>
 <pre><code class="language-Racket">....
 (λ (msg . vals)
   (case msg
@@ -782,7 +844,10 @@ self: undefined;
 15
 </code></pre>
 <h2 id="56">5.6 匿名类，局部类和嵌套类</h2>
-<p>我们扩展了Scheme，引入了类。扩展的方式类似于之前的对象系统，类表示为一等（first-class）函数。这意味着，我们语言中的类是一等的实体，例如可以作为参数传递（参见前面<code>create</code>函数的定义）。另外，我们的系统也支持匿名类和嵌套的类。当然，这一切都建立在遵从词法作用域规则的基础上。</p>
+<p>我们扩展了 Scheme，引入了类。扩展的方式类似于之前的对象系统，类表示为一等
+（first-class）函数。这意味着，我们语言中的类是一等的实体，例如可以作为参数传递
+（参见前面<code>create</code>函数的定义）。另外，我们的系统也支持匿名类和嵌套的类。当然，这
+一切都建立在遵从词法作用域规则的基础上。</p>
 <pre><code class="language-Racket">(define (cst-class-factory cst)
  (CLASS () ([method add (n) (+ n cst)]
             [method sub (n) (- n cst)]
@@ -796,7 +861,8 @@ self: undefined;
 &gt; (-&gt; (new Ops100) mul 2)
 200
 </code></pre>
-<p>我们也可以在局部作用域中引入类。也就是说，不同于类是全局可见的一阶实体的语言，我们可以在局部作用域中定义类。</p>
+<p>我们也可以在局部作用域中引入类。也就是说，不同于类是全局可见的一阶实体的语言，我
+们可以在局部作用域中定义类。</p>
 <pre><code class="language-Racket">(define doubleton
   (let ([the-class (CLASS ([field x 0])
                           ([method initialize (x) (-&gt; self x! x)]
@@ -809,7 +875,10 @@ self: undefined;
 &gt; (-&gt; (cdr doubleton) x?)
 2
 </code></pre>
-<p>在这里，引入<code>the-class</code>的的目的仅在于创建两个实例，然后以对的形式返回这两个实例。在那之后，这个类就不再可用了。换种说法，无法再创建这个类的更多实例了。不过，我们创建的这两个实例当然仍然指向它们的类，因此这些对象仍可以使用。有趣的是，一旦这些对象被垃圾收集，他们的类也可以被收回。</p>
+<p>在这里，引入<code>the-class</code>的的目的仅在于创建两个实例，然后以对的形式返回这两个实例
+。在那之后，这个类就不再可用了。换种说法，无法再创建这个类的更多实例了。不过，我
+们创建的这两个实例当然仍然指向它们的类，因此这些对象仍可以使用。有趣的是，一旦这
+些对象被垃圾收集，他们的类也可以被收回。</p>
 
 
 

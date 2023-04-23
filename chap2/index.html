@@ -19,7 +19,7 @@
     
     
       
-        <title>2 寻找Self - 面对对象编程语言：应用和解释</title>
+        <title>2 寻找 Self - 面对对象编程语言：应用和解释</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              2 寻找Self
+              2 寻找 Self
             
           </span>
         </div>
@@ -194,6 +194,21 @@
   
   
     <li class="md-nav__item">
+      <a href="../chap0/" class="md-nav__link">
+        前言
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../chap1/" class="md-nav__link">
         1 从函数到简单对象
       </a>
@@ -219,12 +234,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          2 寻找Self
+          2 寻找 Self
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        2 寻找Self
+        2 寻找 Self
       </a>
       
         
@@ -244,21 +259,21 @@
       
         <li class="md-nav__item">
   <a href="#21-self" class="md-nav__link">
-    2.1 Self是什么?
+    2.1 Self 是什么?
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#22-self" class="md-nav__link">
-    2.2 用宏实现Self
+    2.2 用宏实现 Self
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#23-self" class="md-nav__link">
-    2.3 用到Self的点对象
+    2.3 用到 Self 的点对象
   </a>
   
 </li>
@@ -388,21 +403,21 @@
       
         <li class="md-nav__item">
   <a href="#21-self" class="md-nav__link">
-    2.1 Self是什么?
+    2.1 Self 是什么?
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#22-self" class="md-nav__link">
-    2.2 用宏实现Self
+    2.2 用宏实现 Self
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#23-self" class="md-nav__link">
-    2.3 用到Self的点对象
+    2.3 用到 Self 的点对象
   </a>
   
 </li>
@@ -439,16 +454,20 @@
   
 
 
-<h1 id="2-self">2 寻找Self</h1>
-<p>在前一章中，我们构建了一个简单的对象系统。现在我们来考虑为点对象定义above方法，它读入的参数是另一个点，返回更高的（从y轴角度看）点：</p>
+<h1 id="2-self">2 寻找 Self</h1>
+<p>在前一章中，我们构建了一个简单的对象系统。现在我们来考虑为点对象定义 above 方法
+，它读入的参数是另一个点，返回更高的（从 y 轴角度看）点：</p>
 <pre><code class="language-Racket">(method above (other-point)
         (if (&gt; (-&gt; other-point y?) y)
             other-point
             self))
 </code></pre>
-<p>请注意，我们直观地使用self来表示当前正在执行的对象；在其他有些语言中，它被称为this。显然，我们对OOP的描述并没有告诉我们self是什么。</p>
-<h2 id="21-self">2.1 Self是什么?</h2>
-<p>回过头看看最初那个对象的定义（没有宏的那个）。对象是函数；所以我们想要的是在这个函数范围内能够引用自己。该怎么做呢？研究递归的时候我们已经知道答案了！只需使用递归绑定（letrec）给函数—对象命名，然后就可以在方法定义中使用了：</p>
+<p>请注意，我们直观地使用 self 来表示当前正在执行的对象；在其他有些语言中，它被称为
+this。显然，我们对 OOP 的描述并没有告诉我们 self 是什么。</p>
+<h2 id="21-self">2.1 Self 是什么?</h2>
+<p>回过头看看最初那个对象的定义（没有宏的那个）。对象是函数；所以我们想要的是在这个
+函数范围内能够引用自己。该怎么做呢？研究递归的时候我们已经知道答案了！只需使用递
+归绑定（letrec）给函数—对象命名，然后就可以在方法定义中使用了：</p>
 <pre><code class="language-Racket">(define point
   (letrec ([self
             (let ([x 0])
@@ -460,16 +479,16 @@
                   (apply (cdr (assoc msg methods)) args))))])
     self))
 </code></pre>
-<p>请注意，letrec的主体就返回self，它绑定到我们定义的递归子程序。</p>
+<p>请注意，letrec 的主体就返回 self，它绑定到我们定义的递归子程序。</p>
 <pre><code class="language-Racket">&gt; ((point 'x! 10) 'x?)
 10
 </code></pre>
 <blockquote>
-<p>在Smalltalk语言中，方法默认返回self。</p>
+<p>在 Smalltalk 语言中，方法默认返回 self。</p>
 </blockquote>
-<p>请注意，赋值方法<code>x!</code>返回self，这使得我们可以链式传递消息。</p>
-<h2 id="22-self">2.2 用宏实现Self</h2>
-<p>在我们的OBJECT宏中使用上述模式：</p>
+<p>请注意，赋值方法<code>x!</code>返回 self，这使得我们可以链式传递消息。</p>
+<h2 id="22-self">2.2 用宏实现 Self</h2>
+<p>在我们的 OBJECT 宏中使用上述模式：</p>
 <pre><code class="language-Racket">(defmac (OBJECT ([field fname init] ...)
                 ([method mname args body] ...))
   #:keywords field method
@@ -500,8 +519,13 @@
 self: undefined;
  cannot reference undefined identifier
 </code></pre>
-<p>什么？？我们明明用letrec定义了self，为什么报错说它没有定义呢？原因是——<strong>卫生</strong>！要知道Scheme的syntax-rules是卫生的，因此，它会透明地重命名宏引入的所有标识符，以确保在宏展开后他们不会意外绑定或者被绑定。使用DrRacket的宏步进器（macro stepper）可以很清楚地观察到这一点。你会看到，greater方法中的self标识符与letrec表达式中的同名标识符的颜色不同。</p>
-<p>幸运的是，defmac支持一种方法，指定宏本身引入的标识符也可以被用户代码使用。这里我们唯一需要做的是指定self就是这样的标识符：</p>
+<p>什么？？我们明明用 letrec 定义了 self，为什么报错说它没有定义呢？原因是——<strong>卫
+生</strong>！要知道 Scheme 的 syntax-rules 是卫生的，因此，它会透明地重命名宏引入的所有
+标识符，以确保在宏展开后他们不会意外绑定或者被绑定。使用 DrRacket 的宏步进器
+（macro stepper）可以很清楚地观察到这一点。你会看到，greater 方法中的 self 标识
+符与 letrec 表达式中的同名标识符的颜色不同。</p>
+<p>幸运的是，defmac 支持一种方法，指定宏本身引入的标识符也可以被用户代码使用。这里
+我们唯一需要做的是指定 self 就是这样的标识符：</p>
 <pre><code class="language-Racket">(defmac (OBJECT ([field fname init] ...)
                 ([method mname args body] ...))
   #:keywords field method
@@ -513,8 +537,8 @@ self: undefined;
                   (apply (cdr (assoc msg methods)) vals))))])
     self))
 </code></pre>
-<h2 id="23-self">2.3 用到Self的点对象</h2>
-<p>现在我们可以定义种种方法，或返回self，或在方法体中使用self：</p>
+<h2 id="23-self">2.3 用到 Self 的点对象</h2>
+<p>现在我们可以定义种种方法，或返回 self，或在方法体中使用 self：</p>
 <pre><code class="language-Racket">(define (make-point init-x init-y)
  (OBJECT
   ([field x init-x]
@@ -542,9 +566,11 @@ self: undefined;
 6
 </code></pre>
 <h2 id="24">2.4 互相递归的方法</h2>
-<p>上一节已经表明，方法可以通过向self发送消息来使用其他方法。这个例子展示相互递归的方法。</p>
+<p>上一节已经表明，方法可以通过向 self 发送消息来使用其他方法。这个例子展示相互递归
+的方法。</p>
 <blockquote>
-<p>请在Java中尝试相同的定义，然后比较“大”数字的结果。是啊，我们的简单对象系统确实从尾调用优化中受益了！</p>
+<p>请在 Java 中尝试相同的定义，然后比较“大”数字的结果。是啊，我们的简单对象系统确
+实从尾调用优化中受益了！</p>
 </blockquote>
 <pre><code class="language-Racket">(define odd-even
   (OBJECT ()
@@ -567,9 +593,16 @@ self: undefined;
 &gt; (-&gt; odd-even even 14)
 #t
 </code></pre>
-<p>我们现在的对象系统支持self，包括返回self、发送消息给self。请注意，方法中使用的self是在对象创建时被绑定的：在方法被定义时，它们捕获对self的绑定，此后该绑定就被固定了。我们将在下面的章节中看到，如果想要支持委托，或者想要支持类，这就行不通了。</p>
+<p>我们现在的对象系统支持 self，包括返回 self、发送消息给 self。请注意，方法中使用
+的 self 是在对象创建时被绑定的：在方法被定义时，它们捕获对 self 的绑定，此后该绑
+定就被固定了。我们将在下面的章节中看到，如果想要支持委托，或者想要支持类，这就行
+不通了。</p>
 <h2 id="25">2.5 嵌套的对象</h2>
-<p>对象和方法最终被编译成Scheme中的lambda，因此我们的对象继承了一些有趣的属性。首先，正如我们所看到的，它们是一等公民（不然这一切还有意思吗？）。另外，正如我们刚刚看到的，尾位置的方法调用被视为尾调用，因此空间没有浪费。接下来讨论另一个好处：我们可以使用高阶的编程模式，比如产生对象的对象（通常称为<strong>工厂</strong>）。换一种说法，运用合适的词法范围，我们可以定义<strong>嵌套的对象</strong>。</p>
+<p>对象和方法最终被编译成 Scheme 中的 lambda，因此我们的对象继承了一些有趣的属性。
+首先，正如我们所看到的，它们是一等公民（不然这一切还有意思吗？）。另外，正如我们
+刚刚看到的，尾位置的方法调用被视为尾调用，因此空间没有浪费。接下来讨论另一个好处
+：我们可以使用高阶的编程模式，比如产生对象的对象（通常称为<strong>工厂</strong>）。换一种说法
+，运用合适的词法范围，我们可以定义<strong>嵌套的对象</strong>。</p>
 <p>考虑如下的例子：</p>
 <pre><code class="language-Racket">(define factory
   (OBJECT
@@ -595,7 +628,7 @@ self: undefined;
 40
 </code></pre>
 <blockquote>
-<p>在Java中你能这么做吗？</p>
+<p>在 Java 中你能这么做吗？</p>
 </blockquote>
 <p>请验证这些返回。</p>
 
