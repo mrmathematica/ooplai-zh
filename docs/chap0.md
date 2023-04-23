@@ -1,4 +1,6 @@
-# [面对对象编程语言：应用和解释](https://users.dcc.uchile.cl/~etanter/ooplai/)
+# 前言
+
+[原文](https://users.dcc.uchile.cl/~etanter/ooplai/)
 
 作者 Éric Tanter
 
